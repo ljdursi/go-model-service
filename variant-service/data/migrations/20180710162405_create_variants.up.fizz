@@ -1,0 +1,8 @@
+create_table("variants") {
+	t.Column("id", "uuid", {"primary": true})
+	t.Column("name", "string", {})
+	t.Column("chromosome", "string", {})
+	t.Column("start", "integer", {})
+	t.Column("ref", "string", {})
+	t.Column("alt", "string", {})
+})

@@ -1,0 +1,7 @@
+create_table("calls") {
+	t.Column("id", "uuid", {"primary": true})
+	t.Column("individual", "uuid", {})
+	t.Column("variant", "uuid", {})
+	t.Column("genotype", "string", {})
+	t.Column("format", "string", {})
+})
