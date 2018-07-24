@@ -1,7 +1,7 @@
 consumes:
 - application/json
 info:
-  description: From Jonathan Dursi's OpenAPI tutorial
+  description: A model variant service demonstarting CanDIG API best practices
   title: A barebones service for variant calls
   version: 1.0.0
 paths: {}
