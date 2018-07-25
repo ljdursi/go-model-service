@@ -10,7 +10,7 @@ import (
 
 	"github.com/go-openapi/runtime"
 
-	models "github.com/candig/go-model-service/variant-service/api/models"
+	models "github.com/CanDIG/go-model-service/variant-service/api/models"
 )
 
 // MainPostVariantCreatedCode is the HTTP code returned for type MainPostVariantCreated

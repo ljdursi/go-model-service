@@ -10,15 +10,16 @@ import (
 	runtime "github.com/go-openapi/runtime"
 	middleware "github.com/go-openapi/runtime/middleware"
 	strfmt "github.com/go-openapi/strfmt"
+	graceful "github.com/tylerb/graceful"
 	"github.com/go-openapi/swag"
 
 	"log"
 	"github.com/gobuffalo/pop"
 	"github.com/gobuffalo/pop/nulls"
 
-	"github.com/candig/go-model-service/variant-service/api/restapi/operations"
-	apimodels "github.com/candig/go-model-service/variant-service/api/models"
-	datamodels "github.com/candig/go-model-service/variant-service/data/models"
+	"github.com/CanDIG/go-model-service/variant-service/api/restapi/operations"
+	apimodels "github.com/CanDIG/go-model-service/variant-service/api/models"
+	datamodels "github.com/CanDIG/go-model-service/variant-service/data/models"
 )
 
 //go:generate swagger generate server --target .. --name variant-service --spec ../swagger.yml
@@ -98,7 +99,7 @@ func configureAPI(api *operations.VariantServiceAPI) http.Handler {
 	api.MainGetVariantsHandler = operations.MainGetVariantsHandlerFunc(func(params operations.MainGetVariantsParams) middleware.Responder {
 		tx, err := pop.Connect("development")
 		if err != nil {
-			log.Panic(
+			log.Println(
 				"500 ERROR: Failed to connect to database: development\n" +
 				"In: api.MainGetVariantHandler\n" +
 				"Error message follows:")
@@ -148,7 +149,7 @@ func configureAPI(api *operations.VariantServiceAPI) http.Handler {
 
 		tx, err := pop.Connect("development")
 		if err != nil {
-			log.Panic(
+			log.Println(
 				"500 ERROR: Failed to connect to database: development\n" +
 				"In: api.MainPostVariantHandler\n" +
 				"Error message follows:")
@@ -221,7 +222,7 @@ func configureTLS(tlsConfig *tls.Config) {
 // TODO I changed the Server from graceful.Server to http.Server to avoid
 // mismatches with server.go. Must figure out why the auto-generated code was
 // incompatible and fix.
-func configureServer(s *http.Server, scheme, addr string) {
+func configureServer(s *graceful.Server, scheme, addr string) {
 }
 
 // The middleware configuration is for the handler executors. These do not apply to the swagger.json document.

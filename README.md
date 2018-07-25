@@ -15,7 +15,7 @@ Based on Jonathan Dursi's [OpenAPI variant service demo](https://github.com/ljdu
 
 1. [Install Go](https://golang.org/doc/install). Make sure to set up the `$PATH` and `$GOPATH` environment variables according to [these instructions](https://www.digitalocean.com/community/tutorials/), and to understand the expected contents of the three `$GOPATH` subdirectories: `$GOPATH/src`, `$GOPATH/pkg`, and `$GOPATH/bin`.
 2. [Install dep](https://golang.github.io/dep/docs/installation.html)
-3. [Install go-swagger](https://goswagger.io/install.html).
+3. [Install go-swagger](https://goswagger.io/install.html) (releases 0.15.0 or later strongly recommended.)
 4. [Install pop](https://github.com/gobuffalo/pop). See the [Unnoficial Pop Book](https://andrew-sledge.gitbooks.io/the-unofficial-pop-book/content/installation.html) for instructions.
 5. Install this service as desired:
   * Into a local directory of your choosing with
@@ -23,9 +23,9 @@ Based on Jonathan Dursi's [OpenAPI variant service demo](https://github.com/ljdu
   * Into your go environment with 
   `$ go get github.com/CanDIG/go-model-service`
   (installation directory will be `$GOPATH/src`).
-6. In the root directory of this project (ie. the directory where `Gopkg.lock`, `Gopkg.toml`, and `vendor` are found), run 
+6. In the root directory of this project (ie. the directory where `Gopkg.lock` and `Gopkg.toml` are found), run 
 `$ dep ensure`
-to install all project import dependencies in the `vendor` directory.
+to install all project import dependencies in the new `vendor` directory.
 
 ## Running The Service
 

@@ -2,7 +2,7 @@
 
 /*
 Package restapi A barebones service for variant calls
-From Jonathan Dursi's OpenAPI tutorial
+A model variant service demonstarting CanDIG API best practices
 
 
     Schemes:

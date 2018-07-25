@@ -46,7 +46,7 @@ func NewVariantServiceAPI(spec *loads.Document) *VariantServiceAPI {
 	}
 }
 
-/*VariantServiceAPI From Jonathan Dursi's OpenAPI tutorial */
+/*VariantServiceAPI A model variant service demonstarting CanDIG API best practices */
 type VariantServiceAPI struct {
 	spec            *loads.Document
 	context         *middleware.Context

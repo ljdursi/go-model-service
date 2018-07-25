@@ -82,7 +82,6 @@ func (o *MainGetVariantsParams) BindRequest(r *http.Request, route *middleware.M
 	return nil
 }
 
-// bindChromosome binds and validates parameter Chromosome from query.
 func (o *MainGetVariantsParams) bindChromosome(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
@@ -104,7 +103,6 @@ func (o *MainGetVariantsParams) bindChromosome(rawData []string, hasKey bool, fo
 	return nil
 }
 
-// validateChromosome carries on validations for parameter Chromosome
 func (o *MainGetVariantsParams) validateChromosome(formats strfmt.Registry) error {
 
 	if err := validate.Pattern("chromosome", "query", (*o.Chromosome), `^[a-zA-Z0-9]*$`); err != nil {
@@ -114,7 +112,6 @@ func (o *MainGetVariantsParams) validateChromosome(formats strfmt.Registry) erro
 	return nil
 }
 
-// bindEnd binds and validates parameter End from query.
 func (o *MainGetVariantsParams) bindEnd(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
@@ -140,7 +137,6 @@ func (o *MainGetVariantsParams) bindEnd(rawData []string, hasKey bool, formats s
 	return nil
 }
 
-// validateEnd carries on validations for parameter End
 func (o *MainGetVariantsParams) validateEnd(formats strfmt.Registry) error {
 
 	if err := validate.MinimumInt("end", "query", int64(*o.End), 1, false); err != nil {
@@ -150,7 +146,6 @@ func (o *MainGetVariantsParams) validateEnd(formats strfmt.Registry) error {
 	return nil
 }
 
-// bindStart binds and validates parameter Start from query.
 func (o *MainGetVariantsParams) bindStart(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
@@ -176,7 +171,6 @@ func (o *MainGetVariantsParams) bindStart(rawData []string, hasKey bool, formats
 	return nil
 }
 
-// validateStart carries on validations for parameter Start
 func (o *MainGetVariantsParams) validateStart(formats strfmt.Registry) error {
 
 	if err := validate.MinimumInt("start", "query", int64(*o.Start), 1, false); err != nil {

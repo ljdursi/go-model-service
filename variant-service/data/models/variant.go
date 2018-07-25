@@ -7,7 +7,7 @@ import (
 	"github.com/gobuffalo/uuid"
 	"github.com/gobuffalo/validate"
 	"github.com/gobuffalo/validate/validators"
-	custom_validators "github.com/candig/go-model-service/tools/validators"
+	custom_validators "github.com/CanDIG/go-model-service/tools/validators"
 	"time"
 )
 

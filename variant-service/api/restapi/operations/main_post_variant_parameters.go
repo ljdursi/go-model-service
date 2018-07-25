@@ -12,7 +12,7 @@ import (
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/middleware"
 
-	models "github.com/candig/go-model-service/variant-service/api/models"
+	models "github.com/CanDIG/go-model-service/variant-service/api/models"
 )
 
 // NewMainPostVariantParams creates a new MainPostVariantParams object
@@ -52,6 +52,7 @@ func (o *MainPostVariantParams) BindRequest(r *http.Request, route *middleware.M
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
 			res = append(res, errors.NewParseError("variant", "body", "", err))
 		} else {
+
 			// validate body object
 			if err := body.Validate(route.Formats); err != nil {
 				res = append(res, err)

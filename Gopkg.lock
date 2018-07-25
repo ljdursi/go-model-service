@@ -376,14 +376,19 @@
   revision = "bd320f5d308e1a3c4314c678d8227a0d72574ae7"
 
 [[projects]]
+  name = "github.com/tylerb/graceful"
+  packages = ["."]
+  revision = "4654dfbb6ad53cb5e27f37d99b02e16c1872fbbb"
+  version = "v1.2.15"
+
+[[projects]]
   branch = "master"
   name = "golang.org/x/net"
   packages = [
     "context",
     "html",
     "html/atom",
-    "idna",
-    "netutil"
+    "idna"
   ]
   revision = "a680a1efc54dd51c040b3b5ce4939ea3cf2ea0d1"
 
@@ -445,6 +450,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "9090b175582adeb7617746286fc2abb4ef17f75b98cbb58194fd7c717a88117c"
+  inputs-digest = "b70b5217641330a86c2a560d9a14bcba390e009c9339e7995584622fe6b1f031"
   solver-name = "gps-cdcl"
   solver-version = 1

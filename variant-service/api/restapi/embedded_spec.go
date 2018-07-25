@@ -29,7 +29,7 @@ func init() {
   ],
   "swagger": "2.0",
   "info": {
-    "description": "From Jonathan Dursi's OpenAPI tutorial",
+    "description": "A model variant service demonstarting CanDIG API best practices",
     "title": "A barebones service for variant calls",
     "version": "1.0.0"
   },
@@ -278,7 +278,7 @@ func init() {
   ],
   "swagger": "2.0",
   "info": {
-    "description": "From Jonathan Dursi's OpenAPI tutorial",
+    "description": "A model variant service demonstarting CanDIG API best practices",
     "title": "A barebones service for variant calls",
     "version": "1.0.0"
   },

@@ -3,7 +3,6 @@
 package restapi
 
 import (
-	"context"
 	"crypto/tls"
 	"crypto/x509"
 	"errors"
@@ -12,19 +11,17 @@ import (
 	"net"
 	"net/http"
 	"os"
-	"os/signal"
 	"strconv"
 	"sync"
 	"sync/atomic"
-	"syscall"
 	"time"
 
 	"github.com/go-openapi/runtime/flagext"
 	"github.com/go-openapi/swag"
 	flags "github.com/jessevdk/go-flags"
-	"golang.org/x/net/netutil"
+	graceful "github.com/tylerb/graceful"
 
-	"github.com/candig/go-model-service/variant-service/api/restapi/operations"
+	"github.com/CanDIG/go-model-service/variant-service/api/restapi/operations"
 )
 
 const (
@@ -47,7 +44,6 @@ func NewServer(api *operations.VariantServiceAPI) *Server {
 
 	s.shutdown = make(chan struct{})
 	s.api = api
-	s.interrupt = make(chan os.Signal, 1)
 	return s
 }
 
@@ -98,9 +94,6 @@ type Server struct {
 	hasListeners bool
 	shutdown     chan struct{}
 	shuttingDown int32
-	interrupted  bool
-	interrupt    chan os.Signal
-	chanLock     sync.RWMutex
 }
 
 // Logf logs message either via defined user logger or via system one if no user logger is defined.
@@ -167,80 +160,78 @@ func (s *Server) Serve() (err error) {
 		s.SetHandler(s.api.Serve(nil))
 	}
 
-	wg := new(sync.WaitGroup)
-	once := new(sync.Once)
-	signalNotify(s.interrupt)
-	go handleInterrupt(once, s)
-
-	servers := []*http.Server{}
-	wg.Add(1)
-	go s.handleShutdown(wg, &servers)
+	var wg sync.WaitGroup
 
 	if s.hasScheme(schemeUnix) {
-		domainSocket := new(http.Server)
+		domainSocket := &graceful.Server{Server: new(http.Server)}
 		domainSocket.MaxHeaderBytes = int(s.MaxHeaderSize)
 		domainSocket.Handler = s.handler
+		domainSocket.LogFunc = s.Logf
 		if int64(s.CleanupTimeout) > 0 {
-			domainSocket.IdleTimeout = s.CleanupTimeout
+			domainSocket.Timeout = s.CleanupTimeout
 		}
 
 		configureServer(domainSocket, "unix", string(s.SocketPath))
 
-		wg.Add(1)
+		wg.Add(2)
 		s.Logf("Serving variant service at unix://%s", s.SocketPath)
 		go func(l net.Listener) {
 			defer wg.Done()
-			if err := domainSocket.Serve(l); err != nil && err != http.ErrServerClosed {
+			if err := domainSocket.Serve(l); err != nil {
 				s.Fatalf("%v", err)
 			}
 			s.Logf("Stopped serving variant service at unix://%s", s.SocketPath)
 		}(s.domainSocketL)
-		servers = append(servers, domainSocket)
+		go s.handleShutdown(&wg, domainSocket)
 	}
 
 	if s.hasScheme(schemeHTTP) {
-		httpServer := new(http.Server)
+		httpServer := &graceful.Server{Server: new(http.Server)}
 		httpServer.MaxHeaderBytes = int(s.MaxHeaderSize)
 		httpServer.ReadTimeout = s.ReadTimeout
 		httpServer.WriteTimeout = s.WriteTimeout
 		httpServer.SetKeepAlivesEnabled(int64(s.KeepAlive) > 0)
+		httpServer.TCPKeepAlive = s.KeepAlive
 		if s.ListenLimit > 0 {
-			s.httpServerL = netutil.LimitListener(s.httpServerL, s.ListenLimit)
+			httpServer.ListenLimit = s.ListenLimit
 		}
 
 		if int64(s.CleanupTimeout) > 0 {
-			httpServer.IdleTimeout = s.CleanupTimeout
+			httpServer.Timeout = s.CleanupTimeout
 		}
 
 		httpServer.Handler = s.handler
+		httpServer.LogFunc = s.Logf
 
 		configureServer(httpServer, "http", s.httpServerL.Addr().String())
 
-		wg.Add(1)
+		wg.Add(2)
 		s.Logf("Serving variant service at http://%s", s.httpServerL.Addr())
 		go func(l net.Listener) {
 			defer wg.Done()
-			if err := httpServer.Serve(l); err != nil && err != http.ErrServerClosed {
+			if err := httpServer.Serve(l); err != nil {
 				s.Fatalf("%v", err)
 			}
 			s.Logf("Stopped serving variant service at http://%s", l.Addr())
 		}(s.httpServerL)
-		servers = append(servers, httpServer)
+		go s.handleShutdown(&wg, httpServer)
 	}
 
 	if s.hasScheme(schemeHTTPS) {
-		httpsServer := new(http.Server)
+		httpsServer := &graceful.Server{Server: new(http.Server)}
 		httpsServer.MaxHeaderBytes = int(s.MaxHeaderSize)
 		httpsServer.ReadTimeout = s.TLSReadTimeout
 		httpsServer.WriteTimeout = s.TLSWriteTimeout
 		httpsServer.SetKeepAlivesEnabled(int64(s.TLSKeepAlive) > 0)
+		httpsServer.TCPKeepAlive = s.TLSKeepAlive
 		if s.TLSListenLimit > 0 {
-			s.httpsServerL = netutil.LimitListener(s.httpsServerL, s.TLSListenLimit)
+			httpsServer.ListenLimit = s.TLSListenLimit
 		}
 		if int64(s.CleanupTimeout) > 0 {
-			httpsServer.IdleTimeout = s.CleanupTimeout
+			httpsServer.Timeout = s.CleanupTimeout
 		}
 		httpsServer.Handler = s.handler
+		httpsServer.LogFunc = s.Logf
 
 		// Inspired by https://blog.bracebin.com/achieving-perfect-ssl-labs-score-with-go
 		httpsServer.TLSConfig = &tls.Config{
@@ -300,16 +291,16 @@ func (s *Server) Serve() (err error) {
 
 		configureServer(httpsServer, "https", s.httpsServerL.Addr().String())
 
-		wg.Add(1)
+		wg.Add(2)
 		s.Logf("Serving variant service at https://%s", s.httpsServerL.Addr())
 		go func(l net.Listener) {
 			defer wg.Done()
-			if err := httpsServer.Serve(l); err != nil && err != http.ErrServerClosed {
+			if err := httpsServer.Serve(l); err != nil {
 				s.Fatalf("%v", err)
 			}
 			s.Logf("Stopped serving variant service at https://%s", l.Addr())
 		}(tls.NewListener(s.httpsServerL, httpsServer.TLSConfig))
-		servers = append(servers, httpsServer)
+		go s.handleShutdown(&wg, httpsServer)
 	}
 
 	wg.Wait()
@@ -389,48 +380,29 @@ func (s *Server) Listen() error {
 
 // Shutdown server and clean up resources
 func (s *Server) Shutdown() error {
-	if atomic.CompareAndSwapInt32(&s.shuttingDown, 0, 1) {
-		close(s.shutdown)
+	if atomic.LoadInt32(&s.shuttingDown) != 0 {
+		s.Logf("already shutting down")
+		return nil
 	}
+	s.shutdown <- struct{}{}
 	return nil
 }
 
-func (s *Server) handleShutdown(wg *sync.WaitGroup, serversPtr *[]*http.Server) {
-	// wg.Done must occur last, after s.api.ServerShutdown()
-	// (to preserve old behaviour)
+func (s *Server) handleShutdown(wg *sync.WaitGroup, server *graceful.Server) {
 	defer wg.Done()
-
-	<-s.shutdown
-
-	servers := *serversPtr
-
-	ctx, cancel := context.WithTimeout(context.TODO(), 15*time.Second)
-	defer cancel()
-
-	shutdownChan := make(chan bool)
-	for i := range servers {
-		server := servers[i]
-		go func() {
-			var success bool
-			defer func() {
-				shutdownChan <- success
-			}()
-			if err := server.Shutdown(ctx); err != nil {
-				// Error from closing listeners, or context timeout:
-				s.Logf("HTTP server Shutdown: %v", err)
-			} else {
-				success = true
-			}
-		}()
-	}
-
-	// Wait until all listeners have successfully shut down before calling ServerShutdown
-	success := true
-	for range servers {
-		success = success && <-shutdownChan
-	}
-	if success {
-		s.api.ServerShutdown()
+	for {
+		select {
+		case <-s.shutdown:
+			atomic.AddInt32(&s.shuttingDown, 1)
+			server.Stop(s.CleanupTimeout)
+			<-server.StopChan()
+			s.api.ServerShutdown()
+			return
+		case <-server.StopChan():
+			atomic.AddInt32(&s.shuttingDown, 1)
+			s.api.ServerShutdown()
+			return
+		}
 	}
 }
 
@@ -472,22 +444,4 @@ func (s *Server) TLSListener() (net.Listener, error) {
 		}
 	}
 	return s.httpsServerL, nil
-}
-
-func handleInterrupt(once *sync.Once, s *Server) {
-	once.Do(func() {
-		for _ = range s.interrupt {
-			if s.interrupted {
-				s.Logf("Server already shutting down")
-				continue
-			}
-			s.interrupted = true
-			s.Logf("Shutting down... ")
-			s.Shutdown()
-		}
-	})
-}
-
-func signalNotify(interrupt chan<- os.Signal) {
-	signal.Notify(interrupt, syscall.SIGINT, syscall.SIGTERM)
 }
