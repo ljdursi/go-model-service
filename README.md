@@ -16,7 +16,11 @@ Based on Jonathan Dursi's [OpenAPI variant service demo](https://github.com/ljdu
 1. [Install Go](https://golang.org/doc/install). Make sure to set up the `$PATH` and `$GOPATH` environment variables according to [these instructions](https://www.digitalocean.com/community/tutorials/), and to understand the expected contents of the three `$GOPATH` subdirectories: `$GOPATH/src`, `$GOPATH/pkg`, and `$GOPATH/bin`.
 2. [Install dep](https://golang.github.io/dep/docs/installation.html)
 3. [Install go-swagger](https://goswagger.io/install.html) (releases 0.15.0 or later strongly recommended.)
-4. [Install pop](https://github.com/gobuffalo/pop). See the [Unnoficial Pop Book](https://andrew-sledge.gitbooks.io/the-unofficial-pop-book/content/installation.html) for instructions.
+4. [Install pop](https://github.com/gobuffalo/pop). See the [Unnoficial Pop Book](https://andrew-sledge.gitbooks.io/the-unofficial-pop-book/content/installation.html) for instructions. Make sure to include sqlite3 support with `tags sqlite` in your installation commands, as follows:
+  ```
+  $ go get -u -v -tags sqlite github.com/gobuffalo/pop/...
+  $ go install -tags sqlite github.com/gobuffalo/pop/soda
+  ```
 5. Install this service as desired:
   * Into a local directory of your choosing with
   `$ git checkout https://github.com/CanDIG/go-model-service.git`
@@ -32,6 +36,6 @@ to install all project import dependencies in the new `vendor` directory.
 Navigate to the root directory of the project and enter the following commands to start the server on port 3000 (or any other port; modify the parameter in the last line as desired):
 ```
 $ cd variant-service/api
-$ go build ./variant-service/api/cmd/project-server/main.go
+$ go build -tags sqlite ./variant-service/api/cmd/project-server/main.go
 $ ./main --port=3000
 ```

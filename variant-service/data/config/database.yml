@@ -1,5 +1,0 @@
-development:
-  dialect: "sqlite3"
-  database: "./development.sqlite"
-  host: "localhost"
-  port: "8080"
