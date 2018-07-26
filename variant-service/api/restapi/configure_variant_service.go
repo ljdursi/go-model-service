@@ -13,12 +13,13 @@ import (
 	graceful "github.com/tylerb/graceful"
 	"github.com/go-openapi/swag"
 
-	"log"
 	"github.com/gobuffalo/pop"
 	"github.com/gobuffalo/pop/nulls"
+	"log"
 
-	"github.com/CanDIG/go-model-service/variant-service/api/restapi/operations"
+
 	apimodels "github.com/CanDIG/go-model-service/variant-service/api/models"
+	"github.com/CanDIG/go-model-service/variant-service/api/restapi/operations"
 	datamodels "github.com/CanDIG/go-model-service/variant-service/data/models"
 )
 
@@ -35,32 +36,32 @@ func transformVariantToAPIModel(dataVariant datamodels.Variant) (*apimodels.Vari
 	startNonNullable, ok := dataVariant.Start.Interface().(int) // TODO assert as int64?
 	if !ok {
 		log.Println(
-				"500: Transformation of non-nullable field Variant.Start from data to api model fails to yield valid int\n" +
+			"500: Transformation of non-nullable field Variant.Start from data to api model fails to yield valid int\n" +
 				"In: transformVariantToAPIModel\n")
-			errPayload := &apimodels.Error{Code: 50001, Message: swag.String("")} //TODO message
-			return nil, errPayload
+		errPayload := &apimodels.Error{Code: 50001, Message: swag.String("")} //TODO message
+		return nil, errPayload
 	}
 	transformedStart := int64(startNonNullable)
 
 	apiVariant := &apimodels.Variant{
-		ID:			strfmt.UUID(dataVariant.ID.String()),
-		Name:		&dataVariant.Name,
-		Chromosome:	&dataVariant.Chromosome,
-		Start:		&transformedStart,
-		Ref:		&dataVariant.Ref,
-		Alt:		&dataVariant.Alt}
+		ID:         strfmt.UUID(dataVariant.ID.String()),
+		Name:       &dataVariant.Name,
+		Chromosome: &dataVariant.Chromosome,
+		Start:      &transformedStart,
+		Ref:        &dataVariant.Ref,
+		Alt:        &dataVariant.Alt}
 
 	// TODO should this validation step be exported to transformations package as well?
 	err := apiVariant.Validate(strfmt.NewFormats())
 	if err != nil {
-			// TODO generalize/modularize error logging in a method
-			log.Println(
-				"500: API Schema validation for API-model Variant failed upon transformation\n" +
+		// TODO generalize/modularize error logging in a method
+		log.Println(
+			"500: API Schema validation for API-model Variant failed upon transformation\n" +
 				"In: transformVariantToAPIModel\n" +
 				"Error message follows:")
-			log.Println(err)
-			errPayload := &apimodels.Error{Code: 50001, Message: swag.String("")} //TODO message
-			return apiVariant, errPayload
+		log.Println(err)
+		errPayload := &apimodels.Error{Code: 50001, Message: swag.String("")} //TODO message
+		return apiVariant, errPayload
 	}
 
 	return apiVariant, nil
@@ -69,11 +70,11 @@ func transformVariantToAPIModel(dataVariant datamodels.Variant) (*apimodels.Vari
 //TODO export to transformations package
 func transformVariantToDataModel(apiVariant apimodels.Variant) (*datamodels.Variant, *apimodels.Error) {
 	dataVariant := &datamodels.Variant{
-		Name:		*apiVariant.Name,
-		Chromosome:	*apiVariant.Chromosome,
-		Start:		nulls.NewInt(int(*apiVariant.Start)),
-		Ref:		*apiVariant.Ref,
-		Alt:		*apiVariant.Alt}
+		Name:       *apiVariant.Name,
+		Chromosome: *apiVariant.Chromosome,
+		Start:      nulls.NewInt(int(*apiVariant.Start)),
+		Ref:        *apiVariant.Ref,
+		Alt:        *apiVariant.Alt}
 
 	return dataVariant, nil
 }
@@ -101,47 +102,47 @@ func configureAPI(api *operations.VariantServiceAPI) http.Handler {
 		if err != nil {
 			log.Println(
 				"500 ERROR: Failed to connect to database: development\n" +
-				"In: api.MainGetVariantHandler\n" +
-				"Error message follows:")
+					"In: api.MainGetVariantHandler\n" +
+					"Error message follows:")
 			log.Println(err)
 			errPayload := &apimodels.Error{Code: 50001, Message: swag.String("")} //TODO message
-	        return operations.NewMainGetVariantsInternalServerError().WithPayload(errPayload)
-	    }
+			return operations.NewMainGetVariantsInternalServerError().WithPayload(errPayload)
+		}
 
-	    query := tx.Where("chromosome = '%s' AND start BETWEEN %d AND %d",
-	    	*params.Chromosome, *params.Start, *params.End)
-	    dataVariants := []datamodels.Variant{}
-	    err = query.All(&dataVariants)
-	    if err != nil {
+		query := tx.Where("chromosome = '%s' AND start BETWEEN %d AND %d",
+			*params.Chromosome, *params.Start, *params.End)
+		dataVariants := []datamodels.Variant{}
+		err = query.All(&dataVariants)
+		if err != nil {
 			log.Println( // TODO does this need to be panic?
 				"500 ERROR: Problems getting variants from database\n" +
-				"In: api.MainGetVariantHandler\n" +
-				"Error message follows:")
+					"In: api.MainGetVariantHandler\n" +
+					"Error message follows:")
 			log.Println(err)
 			errPayload := &apimodels.Error{Code: 50001, Message: swag.String("")} //TODO message
-	        return operations.NewMainGetVariantsInternalServerError().WithPayload(errPayload)
-	    }
+			return operations.NewMainGetVariantsInternalServerError().WithPayload(errPayload)
+		}
 
-	    // TODO variants of datamodel, not model structure
-	    // Iterate through all and convert via a conversion method
-	    apiVariants := []*apimodels.Variant{}
-	    for _, dataVariant := range dataVariants {
-	    	apiVariant, errPayload := transformVariantToAPIModel(dataVariant)
-	    	if errPayload != nil {
+		// TODO variants of datamodel, not model structure
+		// Iterate through all and convert via a conversion method
+		apiVariants := []*apimodels.Variant{}
+		for _, dataVariant := range dataVariants {
+			apiVariant, errPayload := transformVariantToAPIModel(dataVariant)
+			if errPayload != nil {
 				return operations.NewMainGetVariantsInternalServerError().WithPayload(errPayload)
-	    	}
-	    	apiVariants = append(apiVariants, apiVariant)
-	    }
+			}
+			apiVariants = append(apiVariants, apiVariant)
+		}
 
-	    return operations.NewMainGetVariantsOK().WithPayload(apiVariants)
+		return operations.NewMainGetVariantsOK().WithPayload(apiVariants)
 	})
 	api.MainPostVariantHandler = operations.MainPostVariantHandlerFunc(func(params operations.MainPostVariantParams) middleware.Responder {
 		err := params.Variant.Validate(strfmt.NewFormats())
 		if err != nil {
 			log.Println(
 				"400: API Schema validation for Variant param failed\n" +
-				"In: api.MainPostVariantHandler\n" +
-				"Error message follows:")
+					"In: api.MainPostVariantHandler\n" +
+					"Error message follows:")
 			log.Println(err)
 			errPayload := &apimodels.Error{Code: 40001, Message: swag.String("")} //TODO message
 			return operations.NewMainPostVariantBadRequest().WithPayload(errPayload)
@@ -151,58 +152,58 @@ func configureAPI(api *operations.VariantServiceAPI) http.Handler {
 		if err != nil {
 			log.Println(
 				"500 ERROR: Failed to connect to database: development\n" +
-				"In: api.MainPostVariantHandler\n" +
-				"Error message follows:")
+					"In: api.MainPostVariantHandler\n" +
+					"Error message follows:")
 			log.Println(err)
 			errPayload := &apimodels.Error{Code: 50001, Message: swag.String("")} //TODO message
-	        return operations.NewMainPostVariantInternalServerError().WithPayload(errPayload)
-	    }
+			return operations.NewMainPostVariantInternalServerError().WithPayload(errPayload)
+		}
 
-	    _, err = getVariantByID(params.Variant.ID.String(), tx)
-	    if err == nil { // TODO not actually a great check
-	    	log.Println(
-	    		"405: Variant ID already exists in database; cannot overwrite with put\n" +
-	    		"In: api.MainPostVariantHandler, getVariantByID(string)")
-	    	errPayload := &apimodels.Error{Code: 40501, Message: swag.String("")} //TODO message
-	        return operations.NewMainPostVariantMethodNotAllowed().WithPayload(errPayload)
-	    }
+		_, err = getVariantByID(params.Variant.ID.String(), tx)
+		if err == nil { // TODO not actually a great check
+			log.Println(
+				"405: Variant ID already exists in database; cannot overwrite with put\n" +
+					"In: api.MainPostVariantHandler, getVariantByID(string)")
+			errPayload := &apimodels.Error{Code: 40501, Message: swag.String("")} //TODO message
+			return operations.NewMainPostVariantMethodNotAllowed().WithPayload(errPayload)
+		}
 
 		newVariant, errPayload := transformVariantToDataModel(*params.Variant)
 		if err != nil {
-	        return operations.NewMainPostVariantInternalServerError().WithPayload(errPayload)
-	    }
+			return operations.NewMainPostVariantInternalServerError().WithPayload(errPayload)
+		}
 
 		_, err = tx.ValidateAndCreate(newVariant)
 		if err != nil {
 			log.Println(
 				"500 ERROR: ValidateAndCreate into database failed\n" +
-				"In: api.MainPostVariantHandler\n" +
-				"Error message follows:")
+					"In: api.MainPostVariantHandler\n" +
+					"Error message follows:")
 			log.Println(err)
 			errPayload := &apimodels.Error{Code: 50001, Message: swag.String("")} //TODO message
-	        return operations.NewMainPostVariantInternalServerError().WithPayload(errPayload)
-	    }
+			return operations.NewMainPostVariantInternalServerError().WithPayload(errPayload)
+		}
 
-	    dataVariant, err := getVariantByID(newVariant.ID.String(), tx) //TODO ID
-	    if err != nil {
+		dataVariant, err := getVariantByID(newVariant.ID.String(), tx) //TODO ID
+		if err != nil {
 			log.Println(
 				"500 ERROR: Failed to get variant by ID from database immediately following its creation\n" +
-				"In: api.MainPostVariantHandler, getVariantByID(string)\n" +
-				"Error message follows:")
+					"In: api.MainPostVariantHandler, getVariantByID(string)\n" +
+					"Error message follows:")
 			log.Println(err)
 			errPayload := &apimodels.Error{Code: 50001, Message: swag.String("")} //TODO message
-	        return operations.NewMainPostVariantInternalServerError().WithPayload(errPayload)
-	    }
+			return operations.NewMainPostVariantInternalServerError().WithPayload(errPayload)
+		}
 
-	    apiVariant, errPayload := transformVariantToAPIModel(*dataVariant)
-	    if err != nil {
-	        return operations.NewMainPostVariantInternalServerError().WithPayload(errPayload)
-	    }
+		apiVariant, errPayload := transformVariantToAPIModel(*dataVariant)
+		if err != nil {
+			return operations.NewMainPostVariantInternalServerError().WithPayload(errPayload)
+		}
 
-	    // TODO check and fix the construction of this URL
-	    location := params.HTTPRequest.URL.Host + params.HTTPRequest.URL.EscapedPath() +
-	    	"/" + apiVariant.ID.String()
-	    return operations.NewMainPostVariantCreated().WithPayload(apiVariant).WithLocation(location)
+		// TODO check and fix the construction of this URL
+		location := params.HTTPRequest.URL.Host + params.HTTPRequest.URL.EscapedPath() +
+			"/" + apiVariant.ID.String()
+		return operations.NewMainPostVariantCreated().WithPayload(apiVariant).WithLocation(location)
 	})
 
 	api.ServerShutdown = func() {}
