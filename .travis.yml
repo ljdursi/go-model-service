@@ -1,0 +1,11 @@
+language: go
+
+go_import_path: ${GOPATH}/src/github.com/CanDIG/go-model-service
+
+before_install:
+ - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+
+install:
+ - dep ensure
+ - cd variant-service/api
+ - go build -o ../../main ./cmd/variant-service-server/main.go
