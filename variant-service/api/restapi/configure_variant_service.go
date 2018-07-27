@@ -21,6 +21,7 @@ import (
 	apimodels "github.com/CanDIG/go-model-service/variant-service/api/models"
 	"github.com/CanDIG/go-model-service/variant-service/api/restapi/operations"
 	datamodels "github.com/CanDIG/go-model-service/variant-service/data/models"
+	"fmt"
 )
 
 //go:generate swagger generate server --target .. --name variant-service --spec ../swagger.yml
@@ -109,8 +110,8 @@ func configureAPI(api *operations.VariantServiceAPI) http.Handler {
 			return operations.NewMainGetVariantsInternalServerError().WithPayload(errPayload)
 		}
 
-		query := tx.Where("chromosome = '%s' AND start BETWEEN %d AND %d",
-			*params.Chromosome, *params.Start, *params.End)
+		query := tx.Where(fmt.Sprintf("chromosome = '%s' AND start BETWEEN %d AND %d",
+			*params.Chromosome, *params.Start, *params.End))
 		dataVariants := []datamodels.Variant{}
 		err = query.All(&dataVariants)
 		if err != nil {
@@ -169,7 +170,7 @@ func configureAPI(api *operations.VariantServiceAPI) http.Handler {
 		}
 
 		newVariant, errPayload := transformVariantToDataModel(*params.Variant)
-		if err != nil {
+		if errPayload != nil {
 			return operations.NewMainPostVariantInternalServerError().WithPayload(errPayload)
 		}
 
