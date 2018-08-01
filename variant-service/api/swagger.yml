@@ -1,15 +1,31 @@
+# This is the API definition that acts as the template for go-swagger to auto-generate
+# boilerplate go code. 
+# For a simple todo-list server tutorial that explains the swagger definitions, see:
+# https://goswagger.io/tutorial/todo-list.html
+# For go-swagger developer instructions and a description of the structure of the `api` directory,
+# see the `README.md` for this project.
+#
+# The two categories of API definitions that impact the manually written segments of the backend:
+# - paths:        Defines the URL paths accessible by the API, including parameters and responses.
+#                 These are used to to populate the `operations` package (found in
+#                 `restapi/operations`), and a handler (to be manually implemented) is generated
+#                 for each of these in `configure_variant_service.go`
+# - definitions:  Defines the schemas/models in the API, for parameters and for responses, to be
+#                 represented by go structs in the code.
+#                 These are used to to populate the `models` package and can be referred to
+#                 throughout this `swagger.yml` file to describe a `schema` property.
+
 consumes:
 - application/json
 info:
   description: A model variant service demonstarting CanDIG API best practices
   title: A barebones service for variant calls
   version: 1.0.0
-paths: {}
 produces:
 - application/json
 schemes:
 - http
-swagger: "2.0"
+swagger: "2.0" # version used by go-swagger tool
 paths:
   /variants:
     get:
