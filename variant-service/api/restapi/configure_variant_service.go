@@ -12,7 +12,6 @@ import (
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/go-openapi/strfmt"
-	"github.com/go-openapi/swag"
 	"github.com/tylerb/graceful"
 	"github.com/gobuffalo/pop"
 	"github.com/gobuffalo/pop/nulls"
@@ -28,8 +27,8 @@ import (
 
 func logError(err error, httpCode int32, locationFunction string, message string) {
 	log.Printf("%d ERROR: %s \n" +
-			"IN: configure_variant_service.go: %s \n",
-			httpCode, message, locationFunction)
+		"IN: configure_variant_service.go: %s \n",
+		httpCode, message, locationFunction)
 	if err != nil {
 		log.Println("ERROR MESSAGE FOLLOWS:\n" + err.Error())
 	}
@@ -43,7 +42,7 @@ func getVariantByID(id string, tx *pop.Connection) (*datamodels.Variant, error) 
 
 //TODO export to transformations package
 func transformVariantToAPIModel(dataVariant datamodels.Variant) (*apimodels.Variant, *apimodels.Error) {
-	startNonNullable, ok := dataVariant.Start.Interface().(int) // TODO assert as int64?
+	startNonNullable, ok := dataVariant.Start.Interface().(int)
 	if !ok {
 		logError(nil, 500,"transformVariantToAPIModel",
 			"Transformation of non-nullable field Variant.Start from data to api model fails to yield valid int")
@@ -136,12 +135,6 @@ func configureAPI(api *operations.VariantServiceAPI) http.Handler {
 	})
 	api.MainPostVariantHandler = operations.MainPostVariantHandlerFunc(func(params operations.MainPostVariantParams) middleware.Responder {
 		err := params.Variant.Validate(strfmt.NewFormats())
-		if err != nil {
-			logError(err, 400,"api.MainPostVariantHandler",
-				"API Schema validation for Variant param failed")
-			errPayload := &apimodels.Error{Code: 40001, Message: swag.String("")} //TODO message
-			return operations.NewMainPostVariantBadRequest().WithPayload(errPayload)
-		}
 
 		tx, err := pop.Connect("development")
 		if err != nil {
@@ -207,9 +200,6 @@ func configureTLS(tlsConfig *tls.Config) {
 // If you need to modify a config, store server instance to stop it individually later, this is the place.
 // This function can be called multiple times, depending on the number of serving schemes.
 // scheme value will be set accordingly: "http", "https" or "unix"
-// TODO I changed the Server from graceful.Server to http.Server to avoid
-// mismatches with server.go. Must figure out why the auto-generated code was
-// incompatible and fix.
 func configureServer(s *graceful.Server, scheme, addr string) {
 }
 

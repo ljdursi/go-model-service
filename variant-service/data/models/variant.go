@@ -7,7 +7,7 @@ import (
 	"github.com/gobuffalo/uuid"
 	"github.com/gobuffalo/validate"
 	"github.com/gobuffalo/validate/validators"
-	custom_validators "github.com/CanDIG/go-model-service/tools/validators"
+	customValidators "github.com/CanDIG/go-model-service/tools/validators"
 	"time"
 )
 
@@ -42,7 +42,7 @@ func (v Variants) String() string {
 func (v *Variant) Validate(tx *pop.Connection) (*validate.Errors, error) {
 	return validate.Validate(
 		&validators.StringIsPresent{Field: v.Chromosome, Name: "Chromosome"},
-		&custom_validators.IntIsNotNull{Field: v.Start, Name: "Start"},
+		&customValidators.IntIsNotNull{Field: v.Start, Name: "Start"},
 		&validators.StringIsPresent{Field: v.Ref, Name: "Ref"},
 		&validators.StringIsPresent{Field: v.Alt, Name: "Alt"},
 	), nil

@@ -41,6 +41,23 @@ $ go build -tags sqlite ./variant-service/api/cmd/project-server/main.go
 $ ./main --port=3000
 ```
 
+### Request examples
+
+Some examples for correctly-formatted CURL requests to the server:
+
+#### GET
+
+```
+$ curl -i "localhost:3000/variants?chromosome=chr1&start=3&end=105"
+```
+
+#### POST
+
+```
+$ curl -i localhost:3000/variants -d "{\"name\":\"rs7054258\", \"chromosome\":\"chr1\", \"start\":5, \"ref\":\"A\", \"alt\":\"T\"}" -H 'Content-Type: application/json'
+$ curl -i localhost:3000/variants -d "{\"name\":\"rs8054208\", \"chromosome\":\"chr1\", \"start\":87, \"ref\":\"C\", \"alt\":\"G\"}" -H 'Content-Type: application/json'
+```
+
 ## For Developers
 
 ### Installing Dev Tools
@@ -109,7 +126,7 @@ Since the database used in this project is `sqlite3`, there are slight modificat
 
 Soda is a CLI tool for generating pop migration files and models, as well as for running up- and down-migrations. Migrations are described in `.fizz` or `.sql` files, and beyond simple migrations such as adding/dropping columns, these files must be manually populated with explicit migration instructions.
 
-Fizz provides a Go-like syntax for writing migrations, but [you may instead opt for writing SQL migrations as desired](https://github.com/gobuffalo/pop#generating-migrations). The fizz syntax is described [here]](https://github.com/markbates/pop/tree/master/fizz).
+Fizz provides a Go-like syntax for writing migrations, but [you may instead opt for writing SQL migrations as desired](https://github.com/gobuffalo/pop#generating-migrations). The fizz syntax is described [here](https://github.com/markbates/pop/tree/master/fizz).
 
 ###### Migrating Pop Models
 
