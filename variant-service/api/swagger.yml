@@ -190,6 +190,7 @@ definitions:
         type: integer
         description: Beginning location of variant
         example: 14370
+        minimum: 1
       ref:
         type: string
         description: Reference bases

@@ -43,6 +43,7 @@ type Variant struct {
 
 	// Beginning location of variant
 	// Required: true
+	// Minimum: 1
 	Start *int64 `json:"start"`
 }
 
@@ -148,6 +149,10 @@ func (m *Variant) validateRef(formats strfmt.Registry) error {
 func (m *Variant) validateStart(formats strfmt.Registry) error {
 
 	if err := validate.Required("start", "body", m.Start); err != nil {
+		return err
+	}
+
+	if err := validate.MinimumInt("start", "body", int64(*m.Start), 1, false); err != nil {
 		return err
 	}
 

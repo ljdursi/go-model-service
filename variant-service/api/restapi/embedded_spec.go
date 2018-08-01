@@ -260,6 +260,7 @@ func init() {
         "start": {
           "description": "Beginning location of variant",
           "type": "integer",
+          "minimum": 1,
           "example": 14370
         }
       }
@@ -509,6 +510,7 @@ func init() {
         "start": {
           "description": "Beginning location of variant",
           "type": "integer",
+          "minimum": 1,
           "example": 14370
         }
       }
