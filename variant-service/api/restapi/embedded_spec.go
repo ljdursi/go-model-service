@@ -34,10 +34,209 @@ func init() {
     "version": "1.0.0"
   },
   "paths": {
+    "/calls": {
+      "get": {
+        "summary": "Get all calls",
+        "operationId": "get_calls",
+        "responses": {
+          "200": {
+            "description": "Return calls",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Call"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Add a call to the database",
+        "operationId": "post_call",
+        "parameters": [
+          {
+            "name": "call",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/Call"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "New call created",
+            "schema": {
+              "$ref": "#/definitions/Call"
+            },
+            "headers": {
+              "Location": {
+                "type": "string",
+                "format": "url"
+              }
+            }
+          },
+          "405": {
+            "description": "Cannot overwrite call",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/calls/{call_id}": {
+      "get": {
+        "summary": "Get specific call",
+        "operationId": "get_one_call",
+        "parameters": [
+          {
+            "$ref": "#/parameters/call_id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return call",
+            "schema": {
+              "$ref": "#/definitions/Call"
+            }
+          },
+          "404": {
+            "description": "Call not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/individuals": {
+      "get": {
+        "summary": "Get all individuals",
+        "operationId": "get_individuals",
+        "responses": {
+          "200": {
+            "description": "Return individuals",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Individual"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Add an individual to the database",
+        "operationId": "post_individual",
+        "parameters": [
+          {
+            "name": "individual",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/Individual"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "New individual created",
+            "schema": {
+              "$ref": "#/definitions/Individual"
+            },
+            "headers": {
+              "Location": {
+                "type": "string",
+                "format": "url"
+              }
+            }
+          },
+          "405": {
+            "description": "Forbidden to overwrite individual in post",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal error - Individual not created",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/individuals/{individual_id}": {
+      "get": {
+        "summary": "Get specific individual",
+        "operationId": "get_one_individual",
+        "parameters": [
+          {
+            "$ref": "#/parameters/individual_id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return individual",
+            "schema": {
+              "$ref": "#/definitions/Individual"
+            }
+          },
+          "404": {
+            "description": "Individual not found"
+          },
+          "500": {
+            "description": "Internal error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/individuals/{individual_id}/variants": {
+      "get": {
+        "summary": "Get variants called in an individual",
+        "operationId": "get_variants_by_individual",
+        "parameters": [
+          {
+            "$ref": "#/parameters/individual_id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return individuals",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Variant"
+              }
+            }
+          },
+          "404": {
+            "description": "Individual does not exist",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
     "/variants": {
       "get": {
         "summary": "Get all variants within genomic range",
-        "operationId": "main.get_variants",
+        "operationId": "get_variants",
         "parameters": [
           {
             "pattern": "^[a-zA-Z0-9]*$",
@@ -84,7 +283,7 @@ func init() {
       },
       "post": {
         "summary": "Add a variant to the database",
-        "operationId": "main.post_variant",
+        "operationId": "post_variant",
         "parameters": [
           {
             "name": "variant",
@@ -102,7 +301,8 @@ func init() {
             },
             "headers": {
               "Location": {
-                "type": "string"
+                "type": "string",
+                "format": "url"
               }
             }
           },
@@ -120,6 +320,65 @@ func init() {
           },
           "500": {
             "description": "Internal error - Variant not created",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/variants/{variant_id}": {
+      "get": {
+        "summary": "Get specific variant",
+        "operationId": "get_one_variant",
+        "parameters": [
+          {
+            "$ref": "#/parameters/variant_id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return variant",
+            "schema": {
+              "$ref": "#/definitions/Variant"
+            }
+          },
+          "404": {
+            "description": "Variant not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/variants/{variant_id}/individuals": {
+      "get": {
+        "summary": "Get individuals with a given variant called",
+        "operationId": "get_individuals_by_variant",
+        "parameters": [
+          {
+            "$ref": "#/parameters/variant_id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return individuals",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Individual"
+              }
+            }
+          },
+          "404": {
+            "description": "Variant does not exist",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -270,6 +529,35 @@ func init() {
           "example": 14370
         }
       }
+    }
+  },
+  "parameters": {
+    "call_id": {
+      "type": "string",
+      "format": "uuid",
+      "x-example": "bf3ba75b-8dfe-4619-b832-31c4a087a589",
+      "description": "Call unique identifier",
+      "name": "call_id",
+      "in": "path",
+      "required": true
+    },
+    "individual_id": {
+      "type": "string",
+      "format": "uuid",
+      "x-example": "bf3ba75b-8dfe-4619-b832-31c4a087a589",
+      "description": "Individual unique identifier",
+      "name": "individual_id",
+      "in": "path",
+      "required": true
+    },
+    "variant_id": {
+      "type": "string",
+      "format": "uuid",
+      "x-example": "bf3ba75b-8dfe-4619-b832-31c4a087a589",
+      "description": "Variant unique identifier",
+      "name": "variant_id",
+      "in": "path",
+      "required": true
     }
   }
 }`))
@@ -290,10 +578,227 @@ func init() {
     "version": "1.0.0"
   },
   "paths": {
+    "/calls": {
+      "get": {
+        "summary": "Get all calls",
+        "operationId": "get_calls",
+        "responses": {
+          "200": {
+            "description": "Return calls",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Call"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Add a call to the database",
+        "operationId": "post_call",
+        "parameters": [
+          {
+            "name": "call",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/Call"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "New call created",
+            "schema": {
+              "$ref": "#/definitions/Call"
+            },
+            "headers": {
+              "Location": {
+                "type": "string",
+                "format": "url"
+              }
+            }
+          },
+          "405": {
+            "description": "Cannot overwrite call",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/calls/{call_id}": {
+      "get": {
+        "summary": "Get specific call",
+        "operationId": "get_one_call",
+        "parameters": [
+          {
+            "type": "string",
+            "format": "uuid",
+            "x-example": "bf3ba75b-8dfe-4619-b832-31c4a087a589",
+            "description": "Call unique identifier",
+            "name": "call_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return call",
+            "schema": {
+              "$ref": "#/definitions/Call"
+            }
+          },
+          "404": {
+            "description": "Call not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/individuals": {
+      "get": {
+        "summary": "Get all individuals",
+        "operationId": "get_individuals",
+        "responses": {
+          "200": {
+            "description": "Return individuals",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Individual"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Add an individual to the database",
+        "operationId": "post_individual",
+        "parameters": [
+          {
+            "name": "individual",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/Individual"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "New individual created",
+            "schema": {
+              "$ref": "#/definitions/Individual"
+            },
+            "headers": {
+              "Location": {
+                "type": "string",
+                "format": "url"
+              }
+            }
+          },
+          "405": {
+            "description": "Forbidden to overwrite individual in post",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal error - Individual not created",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/individuals/{individual_id}": {
+      "get": {
+        "summary": "Get specific individual",
+        "operationId": "get_one_individual",
+        "parameters": [
+          {
+            "type": "string",
+            "format": "uuid",
+            "x-example": "bf3ba75b-8dfe-4619-b832-31c4a087a589",
+            "description": "Individual unique identifier",
+            "name": "individual_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return individual",
+            "schema": {
+              "$ref": "#/definitions/Individual"
+            }
+          },
+          "404": {
+            "description": "Individual not found"
+          },
+          "500": {
+            "description": "Internal error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/individuals/{individual_id}/variants": {
+      "get": {
+        "summary": "Get variants called in an individual",
+        "operationId": "get_variants_by_individual",
+        "parameters": [
+          {
+            "type": "string",
+            "format": "uuid",
+            "x-example": "bf3ba75b-8dfe-4619-b832-31c4a087a589",
+            "description": "Individual unique identifier",
+            "name": "individual_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return individuals",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Variant"
+              }
+            }
+          },
+          "404": {
+            "description": "Individual does not exist",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
     "/variants": {
       "get": {
         "summary": "Get all variants within genomic range",
-        "operationId": "main.get_variants",
+        "operationId": "get_variants",
         "parameters": [
           {
             "pattern": "^[a-zA-Z0-9]*$",
@@ -340,7 +845,7 @@ func init() {
       },
       "post": {
         "summary": "Add a variant to the database",
-        "operationId": "main.post_variant",
+        "operationId": "post_variant",
         "parameters": [
           {
             "name": "variant",
@@ -358,7 +863,8 @@ func init() {
             },
             "headers": {
               "Location": {
-                "type": "string"
+                "type": "string",
+                "format": "url"
               }
             }
           },
@@ -376,6 +882,77 @@ func init() {
           },
           "500": {
             "description": "Internal error - Variant not created",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/variants/{variant_id}": {
+      "get": {
+        "summary": "Get specific variant",
+        "operationId": "get_one_variant",
+        "parameters": [
+          {
+            "type": "string",
+            "format": "uuid",
+            "x-example": "bf3ba75b-8dfe-4619-b832-31c4a087a589",
+            "description": "Variant unique identifier",
+            "name": "variant_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return variant",
+            "schema": {
+              "$ref": "#/definitions/Variant"
+            }
+          },
+          "404": {
+            "description": "Variant not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/variants/{variant_id}/individuals": {
+      "get": {
+        "summary": "Get individuals with a given variant called",
+        "operationId": "get_individuals_by_variant",
+        "parameters": [
+          {
+            "type": "string",
+            "format": "uuid",
+            "x-example": "bf3ba75b-8dfe-4619-b832-31c4a087a589",
+            "description": "Variant unique identifier",
+            "name": "variant_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return individuals",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Individual"
+              }
+            }
+          },
+          "404": {
+            "description": "Variant does not exist",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -526,6 +1103,35 @@ func init() {
           "example": 14370
         }
       }
+    }
+  },
+  "parameters": {
+    "call_id": {
+      "type": "string",
+      "format": "uuid",
+      "x-example": "bf3ba75b-8dfe-4619-b832-31c4a087a589",
+      "description": "Call unique identifier",
+      "name": "call_id",
+      "in": "path",
+      "required": true
+    },
+    "individual_id": {
+      "type": "string",
+      "format": "uuid",
+      "x-example": "bf3ba75b-8dfe-4619-b832-31c4a087a589",
+      "description": "Individual unique identifier",
+      "name": "individual_id",
+      "in": "path",
+      "required": true
+    },
+    "variant_id": {
+      "type": "string",
+      "format": "uuid",
+      "x-example": "bf3ba75b-8dfe-4619-b832-31c4a087a589",
+      "description": "Variant unique identifier",
+      "name": "variant_id",
+      "in": "path",
+      "required": true
     }
   }
 }`))

@@ -37,11 +37,38 @@ func NewVariantServiceAPI(spec *loads.Document) *VariantServiceAPI {
 		BearerAuthenticator: security.BearerAuth,
 		JSONConsumer:        runtime.JSONConsumer(),
 		JSONProducer:        runtime.JSONProducer(),
-		MainGetVariantsHandler: MainGetVariantsHandlerFunc(func(params MainGetVariantsParams) middleware.Responder {
-			return middleware.NotImplemented("operation MainGetVariants has not yet been implemented")
+		GetCallsHandler: GetCallsHandlerFunc(func(params GetCallsParams) middleware.Responder {
+			return middleware.NotImplemented("operation GetCalls has not yet been implemented")
 		}),
-		MainPostVariantHandler: MainPostVariantHandlerFunc(func(params MainPostVariantParams) middleware.Responder {
-			return middleware.NotImplemented("operation MainPostVariant has not yet been implemented")
+		GetIndividualsHandler: GetIndividualsHandlerFunc(func(params GetIndividualsParams) middleware.Responder {
+			return middleware.NotImplemented("operation GetIndividuals has not yet been implemented")
+		}),
+		GetIndividualsByVariantHandler: GetIndividualsByVariantHandlerFunc(func(params GetIndividualsByVariantParams) middleware.Responder {
+			return middleware.NotImplemented("operation GetIndividualsByVariant has not yet been implemented")
+		}),
+		GetOneCallHandler: GetOneCallHandlerFunc(func(params GetOneCallParams) middleware.Responder {
+			return middleware.NotImplemented("operation GetOneCall has not yet been implemented")
+		}),
+		GetOneIndividualHandler: GetOneIndividualHandlerFunc(func(params GetOneIndividualParams) middleware.Responder {
+			return middleware.NotImplemented("operation GetOneIndividual has not yet been implemented")
+		}),
+		GetOneVariantHandler: GetOneVariantHandlerFunc(func(params GetOneVariantParams) middleware.Responder {
+			return middleware.NotImplemented("operation GetOneVariant has not yet been implemented")
+		}),
+		GetVariantsHandler: GetVariantsHandlerFunc(func(params GetVariantsParams) middleware.Responder {
+			return middleware.NotImplemented("operation GetVariants has not yet been implemented")
+		}),
+		GetVariantsByIndividualHandler: GetVariantsByIndividualHandlerFunc(func(params GetVariantsByIndividualParams) middleware.Responder {
+			return middleware.NotImplemented("operation GetVariantsByIndividual has not yet been implemented")
+		}),
+		PostCallHandler: PostCallHandlerFunc(func(params PostCallParams) middleware.Responder {
+			return middleware.NotImplemented("operation PostCall has not yet been implemented")
+		}),
+		PostIndividualHandler: PostIndividualHandlerFunc(func(params PostIndividualParams) middleware.Responder {
+			return middleware.NotImplemented("operation PostIndividual has not yet been implemented")
+		}),
+		PostVariantHandler: PostVariantHandlerFunc(func(params PostVariantParams) middleware.Responder {
+			return middleware.NotImplemented("operation PostVariant has not yet been implemented")
 		}),
 	}
 }
@@ -74,10 +101,28 @@ type VariantServiceAPI struct {
 	// JSONProducer registers a producer for a "application/json" mime type
 	JSONProducer runtime.Producer
 
-	// MainGetVariantsHandler sets the operation handler for the main get variants operation
-	MainGetVariantsHandler MainGetVariantsHandler
-	// MainPostVariantHandler sets the operation handler for the main post variant operation
-	MainPostVariantHandler MainPostVariantHandler
+	// GetCallsHandler sets the operation handler for the get calls operation
+	GetCallsHandler GetCallsHandler
+	// GetIndividualsHandler sets the operation handler for the get individuals operation
+	GetIndividualsHandler GetIndividualsHandler
+	// GetIndividualsByVariantHandler sets the operation handler for the get individuals by variant operation
+	GetIndividualsByVariantHandler GetIndividualsByVariantHandler
+	// GetOneCallHandler sets the operation handler for the get one call operation
+	GetOneCallHandler GetOneCallHandler
+	// GetOneIndividualHandler sets the operation handler for the get one individual operation
+	GetOneIndividualHandler GetOneIndividualHandler
+	// GetOneVariantHandler sets the operation handler for the get one variant operation
+	GetOneVariantHandler GetOneVariantHandler
+	// GetVariantsHandler sets the operation handler for the get variants operation
+	GetVariantsHandler GetVariantsHandler
+	// GetVariantsByIndividualHandler sets the operation handler for the get variants by individual operation
+	GetVariantsByIndividualHandler GetVariantsByIndividualHandler
+	// PostCallHandler sets the operation handler for the post call operation
+	PostCallHandler PostCallHandler
+	// PostIndividualHandler sets the operation handler for the post individual operation
+	PostIndividualHandler PostIndividualHandler
+	// PostVariantHandler sets the operation handler for the post variant operation
+	PostVariantHandler PostVariantHandler
 
 	// ServeError is called when an error is received, there is a default handler
 	// but you can set your own with this
@@ -141,12 +186,48 @@ func (o *VariantServiceAPI) Validate() error {
 		unregistered = append(unregistered, "JSONProducer")
 	}
 
-	if o.MainGetVariantsHandler == nil {
-		unregistered = append(unregistered, "MainGetVariantsHandler")
+	if o.GetCallsHandler == nil {
+		unregistered = append(unregistered, "GetCallsHandler")
 	}
 
-	if o.MainPostVariantHandler == nil {
-		unregistered = append(unregistered, "MainPostVariantHandler")
+	if o.GetIndividualsHandler == nil {
+		unregistered = append(unregistered, "GetIndividualsHandler")
+	}
+
+	if o.GetIndividualsByVariantHandler == nil {
+		unregistered = append(unregistered, "GetIndividualsByVariantHandler")
+	}
+
+	if o.GetOneCallHandler == nil {
+		unregistered = append(unregistered, "GetOneCallHandler")
+	}
+
+	if o.GetOneIndividualHandler == nil {
+		unregistered = append(unregistered, "GetOneIndividualHandler")
+	}
+
+	if o.GetOneVariantHandler == nil {
+		unregistered = append(unregistered, "GetOneVariantHandler")
+	}
+
+	if o.GetVariantsHandler == nil {
+		unregistered = append(unregistered, "GetVariantsHandler")
+	}
+
+	if o.GetVariantsByIndividualHandler == nil {
+		unregistered = append(unregistered, "GetVariantsByIndividualHandler")
+	}
+
+	if o.PostCallHandler == nil {
+		unregistered = append(unregistered, "PostCallHandler")
+	}
+
+	if o.PostIndividualHandler == nil {
+		unregistered = append(unregistered, "PostIndividualHandler")
+	}
+
+	if o.PostVariantHandler == nil {
+		unregistered = append(unregistered, "PostVariantHandler")
 	}
 
 	if len(unregistered) > 0 {
@@ -250,12 +331,57 @@ func (o *VariantServiceAPI) initHandlerCache() {
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
-	o.handlers["GET"]["/variants"] = NewMainGetVariants(o.context, o.MainGetVariantsHandler)
+	o.handlers["GET"]["/calls"] = NewGetCalls(o.context, o.GetCallsHandler)
+
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/individuals"] = NewGetIndividuals(o.context, o.GetIndividualsHandler)
+
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/variants/{variant_id}/individuals"] = NewGetIndividualsByVariant(o.context, o.GetIndividualsByVariantHandler)
+
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/calls/{call_id}"] = NewGetOneCall(o.context, o.GetOneCallHandler)
+
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/individuals/{individual_id}"] = NewGetOneIndividual(o.context, o.GetOneIndividualHandler)
+
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/variants/{variant_id}"] = NewGetOneVariant(o.context, o.GetOneVariantHandler)
+
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/variants"] = NewGetVariants(o.context, o.GetVariantsHandler)
+
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/individuals/{individual_id}/variants"] = NewGetVariantsByIndividual(o.context, o.GetVariantsByIndividualHandler)
 
 	if o.handlers["POST"] == nil {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
-	o.handlers["POST"]["/variants"] = NewMainPostVariant(o.context, o.MainPostVariantHandler)
+	o.handlers["POST"]["/calls"] = NewPostCall(o.context, o.PostCallHandler)
+
+	if o.handlers["POST"] == nil {
+		o.handlers["POST"] = make(map[string]http.Handler)
+	}
+	o.handlers["POST"]["/individuals"] = NewPostIndividual(o.context, o.PostIndividualHandler)
+
+	if o.handlers["POST"] == nil {
+		o.handlers["POST"] = make(map[string]http.Handler)
+	}
+	o.handlers["POST"]["/variants"] = NewPostVariant(o.context, o.PostVariantHandler)
 
 }
 

@@ -47,16 +47,31 @@ Some examples for correctly-formatted CURL requests to the server:
 
 #### GET
 
-```
-$ curl -i "localhost:3000/variants?chromosome=chr1&start=3&end=105"
-```
+##### GET Individuals
+
+all
+`$ curl -i "localhost:3000/individuals`
+
+by ID
+`$ curl -i "localhost:3000/individuals/0d583066-039a-4f61-832e-b0f8f5156f7d"`
+
+##### GET Variants
+
+by ID
+`$ curl -i "localhost:3000/variants/0d583066-039a-4f61-832e-b0f8f5156f7d"`
+
+by parameter
+`$ curl -i "localhost:3000/variants?chromosome=chr1&start=3&end=105"`
 
 #### POST
 
-```
-$ curl -i localhost:3000/variants -d "{\"name\":\"rs7054258\", \"chromosome\":\"chr1\", \"start\":5, \"ref\":\"A\", \"alt\":\"T\"}" -H 'Content-Type: application/json'
-$ curl -i localhost:3000/variants -d "{\"name\":\"rs8054208\", \"chromosome\":\"chr1\", \"start\":87, \"ref\":\"C\", \"alt\":\"G\"}" -H 'Content-Type: application/json'
-```
+##### POST Individuals
+
+`$ curl -i localhost:3000/individuals -d "{\"description\":\"Subject 17\"}" -H 'Content-Type: application/json'`
+
+##### POST Variants
+
+`$ curl -i localhost:3000/variants -d "{\"name\":\"rs7054258\", \"chromosome\":\"chr1\", \"start\":5, \"ref\":\"A\", \"alt\":\"T\"}" -H 'Content-Type: application/json'`
 
 ## For Developers
 
@@ -91,6 +106,10 @@ For example, for this service, from the `go-model-service/variant-service/api` d
 `$ swagger generate server -A variant-service swagger.yml`
 
 The backend can now be implemented by modifying the endpoint handlers in `restapi/configure_<server-name>.go`. The connection to the data backend is made in these handlers. Other configuration such as middleware setup is also written in this file, in its respective methods.
+
+###### Adding New Paths
+
+To prevent overwrite of the backend implementation, the `restapi/configure_<server-name>.go` file is not re-generated if it already exists. Therefore, if new paths are added in the `swagger.yml` file, new handlers for those paths will not be automatically generated into the existing `restapi/configure_<server-name>.go` file. Moving the existing file to a different directory will allow swagger to generate the configuration file with the up-to-date set of handlers upon the next call of `swagger generate server`. The two copies of the file can then be reconciled to include both the new handlers and the previously-implemented ones. 
 
 ##### Boilerplate Code and Directory Structure
 
