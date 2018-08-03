@@ -4,8 +4,8 @@ package restapi
 
 import (
 	"crypto/tls"
-		"log"
 	"net/http"
+	"fmt"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
@@ -13,27 +13,15 @@ import (
 	"github.com/go-openapi/strfmt"
 	"github.com/tylerb/graceful"
 	"github.com/gobuffalo/pop"
-	"github.com/gobuffalo/pop/nulls"
 
 	apimodels "github.com/CanDIG/go-model-service/variant-service/api/models"
 	datamodels "github.com/CanDIG/go-model-service/variant-service/data/models"
+	customErrors "github.com/CanDIG/go-model-service/variant-service/errors"
 	"github.com/CanDIG/go-model-service/variant-service/api/restapi/operations"
-
-	customErrors "github.com/CanDIG/go-model-service/tools/errors"
-	"fmt"
+	"github.com/CanDIG/go-model-service/variant-service/transformations"
 )
 
 //go:generate swagger generate server --target .. --name variant-service --spec ../swagger.yml
-
-// Log a set of error data in a consistent template
-func logError(err error, httpCode int32, locationFunction string, message string) {
-	log.Printf("%d ERROR: %s \n" +
-		"IN: configure_variant_service.go: %s \n",
-		httpCode, message, locationFunction)
-	if err != nil {
-		log.Println("ERROR MESSAGE FOLLOWS:\n" + err.Error())
-	}
-}
 
 func getVariantByID(id string, tx *pop.Connection) (*datamodels.Variant, error) {
 	variant := &datamodels.Variant{}
@@ -49,49 +37,6 @@ func getVariantByID(id string, tx *pop.Connection) (*datamodels.Variant, error) 
 		return conditions + " AND "
 	}
  }
-
-//TODO export to transformations package
-func transformVariantToAPIModel(dataVariant datamodels.Variant) (*apimodels.Variant, *apimodels.Error) {
-	startNonNullable, ok := dataVariant.Start.Interface().(int)
-	if !ok {
-		logError(nil, 500,"transformVariantToAPIModel",
-			"Transformation of non-nullable field Variant.Start from data to api model fails to yield valid int")
-		errPayload := customErrors.DefaultInternalServerError()
-		return nil, errPayload
-	}
-	transformedStart := int64(startNonNullable)
-
-	apiVariant := &apimodels.Variant{
-		ID:         strfmt.UUID(dataVariant.ID.String()),
-		Name:       &dataVariant.Name,
-		Chromosome: &dataVariant.Chromosome,
-		Start:      &transformedStart,
-		Ref:        &dataVariant.Ref,
-		Alt:        &dataVariant.Alt}
-
-	// TODO should this validation step be exported to transformations package as well?
-	err := apiVariant.Validate(strfmt.NewFormats())
-	if err != nil {
-		logError(err, 500,"transformVariantToAPIModel",
-			"API Schema validation for API-model Variant failed upon transformation")
-		errPayload := customErrors.DefaultInternalServerError()
-		return apiVariant, errPayload
-	}
-
-	return apiVariant, nil
-}
-
-//TODO export to transformations package
-func transformVariantToDataModel(apiVariant apimodels.Variant) (*datamodels.Variant, *apimodels.Error) {
-	dataVariant := &datamodels.Variant{
-		Name:       *apiVariant.Name,
-		Chromosome: *apiVariant.Chromosome,
-		Start:      nulls.NewInt(int(*apiVariant.Start)),
-		Ref:        *apiVariant.Ref,
-		Alt:        *apiVariant.Alt}
-
-	return dataVariant, nil
-}
 
 func configureFlags(api *operations.VariantServiceAPI) {
 	// api.CommandLineOptionsGroups = []swag.CommandLineOptionsGroup{ ... }
@@ -114,7 +59,7 @@ func configureAPI(api *operations.VariantServiceAPI) http.Handler {
 	api.MainGetVariantsHandler = operations.MainGetVariantsHandlerFunc(func(params operations.MainGetVariantsParams) middleware.Responder {
 		tx, err := pop.Connect("development")
 		if err != nil {
-			logError(err, 500,"api.MainGetVariantsHandler",
+			customErrors.Log(err, 500,"restapi.api.MainGetVariantHandler",
 				"Failed to connect to database: development")
 			errPayload := customErrors.DefaultInternalServerError()
 			return operations.NewMainGetVariantsInternalServerError().WithPayload(errPayload)
@@ -132,29 +77,29 @@ func configureAPI(api *operations.VariantServiceAPI) http.Handler {
 			conditions = fmt.Sprintf(addAND(conditions) + "start <= '%d'", *params.End)
 		}
 
-		dataVariants := []datamodels.Variant{}
+		var dataVariants []datamodels.Variant
 		if conditions != "" {
 			query := tx.Where(conditions)
 			err = query.All(&dataVariants)
 		} else {
 			message := "Forbidden to query for all variants. " +
 				"Please provide parameters in the query string for 'chromosome', 'start', and/or 'end'."
-			logError(nil, 403,"api.MainGetVariantsHandler", message)
+			customErrors.Log(nil, 403,"api.MainGetVariantsHandler", message)
 			errPayload := &apimodels.Error{Code: 403001, Message: &message}
 			return operations.NewMainGetVariantsForbidden().WithPayload(errPayload)
 		}
 
 		if err != nil {
 			// TODO does this need to be panic?
-			logError(err, 500,"api.MainGetVariantsHandler",
+			customErrors.Log(err, 500,"restapi.api.MainGetVariantHandler",
 				"Problems getting variants from database")
 			errPayload := customErrors.DefaultInternalServerError()
 			return operations.NewMainGetVariantsInternalServerError().WithPayload(errPayload)
 		}
 
-		apiVariants := []*apimodels.Variant{}
+		var apiVariants []*apimodels.Variant
 		for _, dataVariant := range dataVariants {
-			apiVariant, errPayload := transformVariantToAPIModel(dataVariant)
+			apiVariant, errPayload := transformations.VariantDataToAPIModel(dataVariant)
 			if errPayload != nil {
 				return operations.NewMainGetVariantsInternalServerError().WithPayload(errPayload)
 			}
@@ -168,7 +113,7 @@ func configureAPI(api *operations.VariantServiceAPI) http.Handler {
 
 		tx, err := pop.Connect("development")
 		if err != nil {
-			logError(err, 500,"api.MainPostVariantHandler",
+			customErrors.Log(err, 500,"restapi.api.MainPostVariantHandler",
 				"Failed to connect to database: development")
 			errPayload := customErrors.DefaultInternalServerError()
 			return operations.NewMainPostVariantInternalServerError().WithPayload(errPayload)
@@ -178,19 +123,19 @@ func configureAPI(api *operations.VariantServiceAPI) http.Handler {
 		if err == nil { // TODO this is not a great check
 			message := "This variant already exists in the database. " +
 				"It cannot be overwritten with POST; please use PUT instead."
-			logError(nil, 405,"api.MainPostVariantHandler", message)
+			customErrors.Log(nil, 405,"restapi.api.MainPostVariantHandler", message)
 			errPayload := &apimodels.Error{Code: 405001, Message: &message}
 			return operations.NewMainPostVariantMethodNotAllowed().WithPayload(errPayload)
 		}
 
-		newVariant, errPayload := transformVariantToDataModel(*params.Variant)
+		newVariant, errPayload := transformations.VariantAPIToDataModel(*params.Variant, tx)
 		if errPayload != nil {
 			return operations.NewMainPostVariantInternalServerError().WithPayload(errPayload)
 		}
 
 		_, err = tx.ValidateAndCreate(newVariant)
 		if err != nil {
-			logError(err, 500,"api.MainPostVariantHandler",
+			customErrors.Log(err, 500,"restapi.api.MainPostVariantHandler",
 				"ValidateAndCreate into database failed")
 			errPayload := customErrors.DefaultInternalServerError()
 			return operations.NewMainPostVariantInternalServerError().WithPayload(errPayload)
@@ -198,13 +143,13 @@ func configureAPI(api *operations.VariantServiceAPI) http.Handler {
 
 		dataVariant, err := getVariantByID(newVariant.ID.String(), tx)
 		if err != nil {
-			logError(err, 500,"api.MainPostVariantHandler, getVariantByID(string)",
+			customErrors.Log(err, 500,"restapi.api.MainPostVariantHandler, restapi.getVariantByID(string)",
 				"Failed to get variant by ID from database immediately following its creation")
 			errPayload := customErrors.DefaultInternalServerError()
 			return operations.NewMainPostVariantInternalServerError().WithPayload(errPayload)
 		}
 
-		apiVariant, errPayload := transformVariantToAPIModel(*dataVariant)
+		apiVariant, errPayload := transformations.VariantDataToAPIModel(*dataVariant)
 		if err != nil {
 			return operations.NewMainPostVariantInternalServerError().WithPayload(errPayload)
 		}

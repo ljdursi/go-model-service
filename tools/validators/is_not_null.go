@@ -15,7 +15,7 @@ type IsNotNull struct {
 	Field nulls.Nulls
 }
 
-// IsValid checks if nullible field is null; if so returns error
+// IsValid checks if nullable field is null; if so returns error
 func (v *IsNotNull) IsValid(errors *validate.Errors) {
 	if v.Field.Interface() == nil {
 		errors.Add(validators.GenerateKey(v.Name), fmt.Sprintf("%s can not be null.", v.Name))

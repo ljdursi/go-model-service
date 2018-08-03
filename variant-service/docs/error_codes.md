@@ -26,7 +26,7 @@ When posting a new record, be sure not to provide a record ID in the POST reques
 ##### 500000
 
 This is the default internal server error code. No further information can be provided here; please view the issues on the service [project repository](https://github.com/CanDIG/go-model-service/issues) and create a new one if it has not already been brought to our attention. Please include the following in your issue report:
-- A consise and issue-specific Title
+- A concise and issue-specific Title
 - Steps to reproduce
 - Expected Result
 - Actual Result
