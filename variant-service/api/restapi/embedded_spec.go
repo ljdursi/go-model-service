@@ -68,6 +68,12 @@ func init() {
               }
             }
           },
+          "403": {
+            "description": "Forbidden to query for all variants",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
           "500": {
             "description": "Internal error",
             "schema": {
@@ -316,6 +322,12 @@ func init() {
               "items": {
                 "$ref": "#/definitions/Variant"
               }
+            }
+          },
+          "403": {
+            "description": "Forbidden to query for all variants",
+            "schema": {
+              "$ref": "#/definitions/Error"
             }
           },
           "500": {

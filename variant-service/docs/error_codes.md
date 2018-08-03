@@ -8,6 +8,12 @@ The code descriptions provided here are not intended to replace the error messag
 
 ## 400--- Codes
 
+##### 403001
+
+Attempted a forbidden "GET all"-type request.
+
+GET requests for this entity are permitted only with some query parameters provided in the query string.
+
 ##### 405001
 
 Attempted to modify an existing record with POST (record creation), which should only be done with PUT (record modification).

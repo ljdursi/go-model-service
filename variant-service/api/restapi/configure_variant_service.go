@@ -4,8 +4,7 @@ package restapi
 
 import (
 	"crypto/tls"
-	"fmt"
-	"log"
+		"log"
 	"net/http"
 
 	"github.com/go-openapi/errors"
@@ -21,10 +20,12 @@ import (
 	"github.com/CanDIG/go-model-service/variant-service/api/restapi/operations"
 
 	customErrors "github.com/CanDIG/go-model-service/tools/errors"
+	"fmt"
 )
 
 //go:generate swagger generate server --target .. --name variant-service --spec ../swagger.yml
 
+// Log a set of error data in a consistent template
 func logError(err error, httpCode int32, locationFunction string, message string) {
 	log.Printf("%d ERROR: %s \n" +
 		"IN: configure_variant_service.go: %s \n",
@@ -39,6 +40,15 @@ func getVariantByID(id string, tx *pop.Connection) (*datamodels.Variant, error) 
 	err := tx.Find(variant, id)
 	return variant, err
 }
+
+// Only add an AND to the conditions string if it already has contents.
+ func addAND(conditions string) string {
+ 	if conditions == "" {
+ 		return ""
+	} else {
+		return conditions + " AND "
+	}
+ }
 
 //TODO export to transformations package
 func transformVariantToAPIModel(dataVariant datamodels.Variant) (*apimodels.Variant, *apimodels.Error) {
@@ -104,19 +114,39 @@ func configureAPI(api *operations.VariantServiceAPI) http.Handler {
 	api.MainGetVariantsHandler = operations.MainGetVariantsHandlerFunc(func(params operations.MainGetVariantsParams) middleware.Responder {
 		tx, err := pop.Connect("development")
 		if err != nil {
-			logError(err, 500,"api.MainGetVariantHandler",
+			logError(err, 500,"api.MainGetVariantsHandler",
 				"Failed to connect to database: development")
 			errPayload := customErrors.DefaultInternalServerError()
 			return operations.NewMainGetVariantsInternalServerError().WithPayload(errPayload)
 		}
 
-		query := tx.Where(fmt.Sprintf("chromosome = '%s' AND start BETWEEN %d AND %d",
-			*params.Chromosome, *params.Start, *params.End))
+		conditions := ""
+
+		if params.Chromosome != nil {
+			conditions = fmt.Sprintf(addAND(conditions) + "chromosome = '%s'", *params.Chromosome)
+		}
+		if params.Start != nil {
+			conditions = fmt.Sprintf(addAND(conditions) + "start >= '%d'", *params.Start)
+		}
+		if params.End != nil {
+			conditions = fmt.Sprintf(addAND(conditions) + "start <= '%d'", *params.End)
+		}
+
 		dataVariants := []datamodels.Variant{}
-		err = query.All(&dataVariants)
+		if conditions != "" {
+			query := tx.Where(conditions)
+			err = query.All(&dataVariants)
+		} else {
+			message := "Forbidden to query for all variants. " +
+				"Please provide parameters in the query string for 'chromosome', 'start', and/or 'end'."
+			logError(nil, 403,"api.MainGetVariantsHandler", message)
+			errPayload := &apimodels.Error{Code: 403001, Message: &message}
+			return operations.NewMainGetVariantsForbidden().WithPayload(errPayload)
+		}
+
 		if err != nil {
 			// TODO does this need to be panic?
-			logError(err, 500,"api.MainGetVariantHandler",
+			logError(err, 500,"api.MainGetVariantsHandler",
 				"Problems getting variants from database")
 			errPayload := customErrors.DefaultInternalServerError()
 			return operations.NewMainGetVariantsInternalServerError().WithPayload(errPayload)
@@ -144,11 +174,10 @@ func configureAPI(api *operations.VariantServiceAPI) http.Handler {
 			return operations.NewMainPostVariantInternalServerError().WithPayload(errPayload)
 		}
 
-		extantVariant, _ := getVariantByID(params.Variant.ID.String(), tx)
-		if extantVariant != nil {
+		_, err = getVariantByID(params.Variant.ID.String(), tx)
+		if err == nil { // TODO this is not a great check
 			message := "This variant already exists in the database. " +
 				"It cannot be overwritten with POST; please use PUT instead."
-
 			logError(nil, 405,"api.MainPostVariantHandler", message)
 			errPayload := &apimodels.Error{Code: 405001, Message: &message}
 			return operations.NewMainPostVariantMethodNotAllowed().WithPayload(errPayload)

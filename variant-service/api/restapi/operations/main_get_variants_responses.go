@@ -60,6 +60,50 @@ func (o *MainGetVariantsOK) WriteResponse(rw http.ResponseWriter, producer runti
 
 }
 
+// MainGetVariantsForbiddenCode is the HTTP code returned for type MainGetVariantsForbidden
+const MainGetVariantsForbiddenCode int = 403
+
+/*MainGetVariantsForbidden Forbidden to query for all variants
+
+swagger:response mainGetVariantsForbidden
+*/
+type MainGetVariantsForbidden struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewMainGetVariantsForbidden creates MainGetVariantsForbidden with default headers values
+func NewMainGetVariantsForbidden() *MainGetVariantsForbidden {
+
+	return &MainGetVariantsForbidden{}
+}
+
+// WithPayload adds the payload to the main get variants forbidden response
+func (o *MainGetVariantsForbidden) WithPayload(payload *models.Error) *MainGetVariantsForbidden {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the main get variants forbidden response
+func (o *MainGetVariantsForbidden) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *MainGetVariantsForbidden) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(403)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
 // MainGetVariantsInternalServerErrorCode is the HTTP code returned for type MainGetVariantsInternalServerError
 const MainGetVariantsInternalServerErrorCode int = 500
 
