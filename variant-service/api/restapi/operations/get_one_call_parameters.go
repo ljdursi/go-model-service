@@ -58,6 +58,7 @@ func (o *GetOneCallParams) BindRequest(r *http.Request, route *middleware.Matche
 	return nil
 }
 
+// bindCallID binds and validates parameter CallID from path.
 func (o *GetOneCallParams) bindCallID(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
@@ -81,11 +82,11 @@ func (o *GetOneCallParams) bindCallID(rawData []string, hasKey bool, formats str
 	return nil
 }
 
+// validateCallID carries on validations for parameter CallID
 func (o *GetOneCallParams) validateCallID(formats strfmt.Registry) error {
 
 	if err := validate.FormatOf("call_id", "path", "uuid", o.CallID.String(), formats); err != nil {
 		return err
 	}
-
 	return nil
 }

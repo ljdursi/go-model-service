@@ -401,3 +401,4 @@ definitions:
         type: string
         description: Alternate (variant) bases
         example: "A"
+        

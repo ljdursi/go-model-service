@@ -58,6 +58,7 @@ func (o *GetVariantsByIndividualParams) BindRequest(r *http.Request, route *midd
 	return nil
 }
 
+// bindIndividualID binds and validates parameter IndividualID from path.
 func (o *GetVariantsByIndividualParams) bindIndividualID(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
@@ -81,11 +82,11 @@ func (o *GetVariantsByIndividualParams) bindIndividualID(rawData []string, hasKe
 	return nil
 }
 
+// validateIndividualID carries on validations for parameter IndividualID
 func (o *GetVariantsByIndividualParams) validateIndividualID(formats strfmt.Registry) error {
 
 	if err := validate.FormatOf("individual_id", "path", "uuid", o.IndividualID.String(), formats); err != nil {
 		return err
 	}
-
 	return nil
 }

@@ -12,6 +12,7 @@ Based on Jonathan Dursi's [OpenAPI variant service demo](https://github.com/CanD
 - Gobuffalo [pop](https://github.com/gobuffalo/pop) is used as an orm-like for interfacing between the go code and the sqlite3 database. The `soda` CLI auto-generates boilerplate Go code for models and migrations, as well as performing migrations on the database. `fizz` files are used for defining database migrations in a Go-like syntax (see [syntax documentation](https://github.com/markbates/pop/tree/master/fizz).)
 - [Go-swagger](https://goswagger.io/) auto-generates boilerplate Go code from a `swagger.yml` API definition. [Swagger](https://swagger.io/) tooling isbased on the [OpenAPI](https://www.openapis.org/) specification.
 - [dep](https://golang.github.io/dep/docs/introduction.html) is used for dependency management.
+- [genny](https://github.com/CanDIG/genny) is a code-generation solution to generics in Go.
 - Gobuffalo [validate](https://github.com/gobuffalo/validate) is a framework used for writing custom validators. Some of their validators in the `validators` package are used as-is.
 
 ## Installation
@@ -84,6 +85,7 @@ In addition to all steps in the Installation section above, install the followin
   $ go get -u -v -tags sqlite github.com/gobuffalo/pop/...
   $ go install -tags sqlite github.com/gobuffalo/pop/soda
   ```
+3. [Install genny](https://github.com/CanDIG/genny#genny---generics-for-go)
 
 ### Instructions for Development
 
@@ -166,3 +168,13 @@ There is some complexity introduced in representing database tables with Go stru
 By default, null-values from the database are transformed into Go's zero-values for a column that is represented in Go by a non-nillable type. For example, the `Chromosome` field of the `Variant` model (in `variant.go`) is of type string, and if a value for `chromosome` is not supplied in an entry, the value of the `Chromosome` field is `""`. The `validators` package used to validate *required* fields in pop only checks for these fields having a non-zero value.
 
 This project uses the `pop/nulls` package to handle non-nullable fields that should be permitted to have zero values, such as the `Start` field of the `Variant` model. This field is of type nulls.Int, which is able to support null values (and therefore a custom `int_is_not_null.go` validator.)
+
+#### Genny
+
+Genny is a code-generation solution to the lack of generics in Go. We use it handle the myriad of similarly-named auto-generated go files created by the pop and Go-Swagger tools.
+
+See the [genny README](https://github.com/CanDIG/genny#genny---generics-for-go) for usage instructions and examples. It operates essentially like a copy-then-search-and-replace for generating typed functions out of functions written for generic types. This reduces code duplication by allowing for the development of type-agnostic code.
+
+Run `$ variant-service/api/generate_handlers.sh` to re-generate the handlers in the `github.com/CanDIG/go-model-service/variant-service/api/restapi/handlers` package.
+
+The template handlers in the `api/generics` package are not run as a part of the service, but are able to compile thanks to place-holder/scaffolding code in the `data/models`, `api/models`, `api/restapi/operations`, and `api/restapi/utilities` packages. This placeholder code can be easily identified by its employment of the "generic" type/word `Resource`.

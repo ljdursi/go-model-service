@@ -58,6 +58,7 @@ func (o *GetOneVariantParams) BindRequest(r *http.Request, route *middleware.Mat
 	return nil
 }
 
+// bindVariantID binds and validates parameter VariantID from path.
 func (o *GetOneVariantParams) bindVariantID(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
@@ -81,11 +82,11 @@ func (o *GetOneVariantParams) bindVariantID(rawData []string, hasKey bool, forma
 	return nil
 }
 
+// validateVariantID carries on validations for parameter VariantID
 func (o *GetOneVariantParams) validateVariantID(formats strfmt.Registry) error {
 
 	if err := validate.FormatOf("variant_id", "path", "uuid", o.VariantID.String(), formats); err != nil {
 		return err
 	}
-
 	return nil
 }

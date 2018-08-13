@@ -29,7 +29,7 @@ func IndividualDataToAPIModel(dataIndividual datamodels.Individual) (*apimodels.
 	}
 
 	return apiIndividual, nil
-}// response, as it can be used as the response payload immediately.
+}
 
 
 //TODO is it really ok to have the validation occur here, with only a Save in configure_Individual_service following the call

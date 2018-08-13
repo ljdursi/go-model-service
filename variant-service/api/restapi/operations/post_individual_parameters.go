@@ -52,7 +52,6 @@ func (o *PostIndividualParams) BindRequest(r *http.Request, route *middleware.Ma
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
 			res = append(res, errors.NewParseError("individual", "body", "", err))
 		} else {
-
 			// validate body object
 			if err := body.Validate(route.Formats); err != nil {
 				res = append(res, err)

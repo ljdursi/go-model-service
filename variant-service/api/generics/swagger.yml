@@ -1,0 +1,109 @@
+# This is the API definition that acts as the template for go-swagger to auto-generate
+# boilerplate go code. 
+# It can be used to generate the operations and models needed for the generic
+# version of the service, from which some of the variant-service go code is auto-generated
+# by genny.
+
+consumes:
+- application/json
+info:
+  description: A generic-resource version of the model variant service
+  title: A generic-resource service
+  version: 1.0.0
+produces:
+- application/json
+schemes:
+- http
+swagger: "2.0" # version used by go-swagger tool
+
+paths:
+  /resources:
+    post:
+      operationId: post_resource
+      summary: Add a resource to the database
+      parameters:
+      - name: resource
+        in: body
+        schema:
+          $ref: '#/definitions/Resource'
+      responses:
+        201:
+          description: New resource created
+          schema:
+            $ref: "#/definitions/Resource"
+          headers:
+            Location:
+              type: string
+              format: url
+        405:
+          description: Forbidden to overwrite resource in post
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: Internal error - Resource not created
+          schema:
+            $ref: "#/definitions/Error"
+    get:
+      operationId: get_resources
+      summary: Get all resources
+      responses:
+        200:
+          description: Return resources
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Resource'
+        500:
+          description: Internal error
+          schema:
+            $ref: "#/definitions/Error"
+
+  /resources/{resource_id}:
+    get:
+      operationId: get_one_resource
+      summary: Get specific resource
+      parameters:
+      - $ref: '#/parameters/resource_id'
+      responses:
+        200:
+          description: Return resource
+          schema:
+            $ref: '#/definitions/Resource'
+        404:
+          description: Resource not found
+        500:
+          description: Internal error
+          schema:
+            $ref: "#/definitions/Error"
+
+parameters:
+  resource_id:
+    name: resource_id
+    description: Resource unique identifier
+    in: path
+    type: string
+    format: uuid
+    x-example: bf3ba75b-8dfe-4619-b832-31c4a087a589
+    required: true
+
+definitions:
+  Error:
+    type: object
+    required:
+      - message
+    properties: 
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+  Resource:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uuid
+        description: Unique internal identifier
+        # TODO should we be scarmbling this uuid 
+        example: bf3ba75b-8dfe-4619-b832-31c4a087a589
+        readOnly: true
