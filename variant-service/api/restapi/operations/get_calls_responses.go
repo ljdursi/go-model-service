@@ -59,3 +59,47 @@ func (o *GetCallsOK) WriteResponse(rw http.ResponseWriter, producer runtime.Prod
 	}
 
 }
+
+// GetCallsInternalServerErrorCode is the HTTP code returned for type GetCallsInternalServerError
+const GetCallsInternalServerErrorCode int = 500
+
+/*GetCallsInternalServerError Internal error
+
+swagger:response getCallsInternalServerError
+*/
+type GetCallsInternalServerError struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewGetCallsInternalServerError creates GetCallsInternalServerError with default headers values
+func NewGetCallsInternalServerError() *GetCallsInternalServerError {
+
+	return &GetCallsInternalServerError{}
+}
+
+// WithPayload adds the payload to the get calls internal server error response
+func (o *GetCallsInternalServerError) WithPayload(payload *models.Error) *GetCallsInternalServerError {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the get calls internal server error response
+func (o *GetCallsInternalServerError) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *GetCallsInternalServerError) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(500)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}

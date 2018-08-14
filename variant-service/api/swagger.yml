@@ -82,6 +82,8 @@ paths:
             $ref: '#/definitions/Individual'
         404:
           description: Individual not found
+          schema:
+            $ref: "#/definitions/Error"
         500:
           description: Internal error
           schema:
@@ -136,10 +138,6 @@ paths:
             Location:
               type: string
               format: url
-        400:
-          description: Variant provided in body does not pass schema validation
-          schema:
-            $ref: "#/definitions/Error"
         405:
           description: Forbidden to overwrite variant in put
           schema:
@@ -191,6 +189,10 @@ paths:
           description: Cannot overwrite call
           schema:
             $ref: "#/definitions/Error"
+        500:
+          description: Internal error
+          schema:
+            $ref: "#/definitions/Error"
     get:
       operationId: get_calls
       summary: Get all calls
@@ -201,6 +203,10 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Call'
+        500:
+          description: Internal error
+          schema:
+            $ref: "#/definitions/Error"
 
   /calls/{call_id}:
     get:
@@ -239,6 +245,10 @@ paths:
           description: Individual does not exist
           schema:
             $ref: "#/definitions/Error"
+        500:
+          description: Internal error
+          schema:
+            $ref: "#/definitions/Error"
 
   /variants/{variant_id}/individuals:
     get:
@@ -255,6 +265,10 @@ paths:
               $ref: '#/definitions/Individual'
         404:
           description: Variant does not exist
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: Internal error
           schema:
             $ref: "#/definitions/Error"
 
@@ -306,7 +320,7 @@ definitions:
         type: string
         format: uuid
         description: Unique internal identifier
-        # TODO should we be scarmbling this uuid 
+        # TODO should we be scrambling this uuid
         example: bf3ba75b-8dfe-4619-b832-31c4a087a589
         readOnly: true
       created:
@@ -341,15 +355,17 @@ definitions:
         example: "2017-07-21T17:32:28Z"
         readOnly: true
       individual_id:
-        type: integer
-        format: int64
+        type: string
+        format: uuid
         description: Unique internal identifier for the subject
-        example: 123
+        example: bf3ba75b-8dfe-4619-b832-31c4a087a589
+        readOnly: true
       variant_id:
-        type: integer
-        format: int64
+        type: string
+        format: uuid
         description: Unique internal identifier for the variant
-        example: 123
+        example: bf3ba75b-8dfe-4619-b832-31c4a087a589
+        readOnly: true
       genotype:
         type: string
         description: Called genotype

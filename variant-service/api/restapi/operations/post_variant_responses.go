@@ -79,50 +79,6 @@ func (o *PostVariantCreated) WriteResponse(rw http.ResponseWriter, producer runt
 	}
 }
 
-// PostVariantBadRequestCode is the HTTP code returned for type PostVariantBadRequest
-const PostVariantBadRequestCode int = 400
-
-/*PostVariantBadRequest Variant provided in body does not pass schema validation
-
-swagger:response postVariantBadRequest
-*/
-type PostVariantBadRequest struct {
-
-	/*
-	  In: Body
-	*/
-	Payload *models.Error `json:"body,omitempty"`
-}
-
-// NewPostVariantBadRequest creates PostVariantBadRequest with default headers values
-func NewPostVariantBadRequest() *PostVariantBadRequest {
-
-	return &PostVariantBadRequest{}
-}
-
-// WithPayload adds the payload to the post variant bad request response
-func (o *PostVariantBadRequest) WithPayload(payload *models.Error) *PostVariantBadRequest {
-	o.Payload = payload
-	return o
-}
-
-// SetPayload sets the payload to the post variant bad request response
-func (o *PostVariantBadRequest) SetPayload(payload *models.Error) {
-	o.Payload = payload
-}
-
-// WriteResponse to the client
-func (o *PostVariantBadRequest) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
-
-	rw.WriteHeader(400)
-	if o.Payload != nil {
-		payload := o.Payload
-		if err := producer.Produce(rw, payload); err != nil {
-			panic(err) // let the recovery middleware deal with this
-		}
-	}
-}
-
 // PostVariantMethodNotAllowedCode is the HTTP code returned for type PostVariantMethodNotAllowed
 const PostVariantMethodNotAllowedCode int = 405
 

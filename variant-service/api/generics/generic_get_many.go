@@ -20,9 +20,10 @@ func GetResources(params operations.GetResourcesParams) middleware.Responder {
 		return operations.NewPostResourceInternalServerError().WithPayload(errPayload)
 	}
 
-	query, errPayload := utilities.GetResourcesQuery(params, tx)
-	if errPayload != nil {
-		return operations.NewPostResourceInternalServerError().WithPayload(errPayload)
+	// the full error response is handled here rather than the payload because a variety of http codes may occur
+	query, errResponse := getResourcesQuery(params, tx)
+	if errResponse != nil {
+		return errResponse
 	}
 
 	var dataResources []datamodels.Resource

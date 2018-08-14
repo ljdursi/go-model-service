@@ -38,11 +38,15 @@ type Call struct {
 
 	// Unique internal identifier for the subject
 	// Required: true
-	IndividualID *int64 `json:"individual_id"`
+	// Read Only: true
+	// Format: uuid
+	IndividualID strfmt.UUID `json:"individual_id"`
 
 	// Unique internal identifier for the variant
 	// Required: true
-	VariantID *int64 `json:"variant_id"`
+	// Read Only: true
+	// Format: uuid
+	VariantID strfmt.UUID `json:"variant_id"`
 }
 
 // Validate validates this call
@@ -133,7 +137,11 @@ func (m *Call) validateID(formats strfmt.Registry) error {
 
 func (m *Call) validateIndividualID(formats strfmt.Registry) error {
 
-	if err := validate.Required("individual_id", "body", m.IndividualID); err != nil {
+	if err := validate.Required("individual_id", "body", strfmt.UUID(m.IndividualID)); err != nil {
+		return err
+	}
+
+	if err := validate.FormatOf("individual_id", "body", "uuid", m.IndividualID.String(), formats); err != nil {
 		return err
 	}
 
@@ -142,7 +150,11 @@ func (m *Call) validateIndividualID(formats strfmt.Registry) error {
 
 func (m *Call) validateVariantID(formats strfmt.Registry) error {
 
-	if err := validate.Required("variant_id", "body", m.VariantID); err != nil {
+	if err := validate.Required("variant_id", "body", strfmt.UUID(m.VariantID)); err != nil {
+		return err
+	}
+
+	if err := validate.FormatOf("variant_id", "body", "uuid", m.VariantID.String(), formats); err != nil {
 		return err
 	}
 

@@ -47,6 +47,12 @@ func init() {
                 "$ref": "#/definitions/Call"
               }
             }
+          },
+          "500": {
+            "description": "Internal error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
           }
         }
       },
@@ -77,6 +83,12 @@ func init() {
           },
           "405": {
             "description": "Cannot overwrite call",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal error",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -194,7 +206,10 @@ func init() {
             }
           },
           "404": {
-            "description": "Individual not found"
+            "description": "Individual not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
           },
           "500": {
             "description": "Internal error",
@@ -226,6 +241,12 @@ func init() {
           },
           "404": {
             "description": "Individual does not exist",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal error",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -306,12 +327,6 @@ func init() {
               }
             }
           },
-          "400": {
-            "description": "Variant provided in body does not pass schema validation",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          },
           "405": {
             "description": "Forbidden to overwrite variant in put",
             "schema": {
@@ -382,6 +397,12 @@ func init() {
             "schema": {
               "$ref": "#/definitions/Error"
             }
+          },
+          "500": {
+            "description": "Internal error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
           }
         }
       }
@@ -425,15 +446,17 @@ func init() {
         },
         "individual_id": {
           "description": "Unique internal identifier for the subject",
-          "type": "integer",
-          "format": "int64",
-          "example": 123
+          "type": "string",
+          "format": "uuid",
+          "readOnly": true,
+          "example": "bf3ba75b-8dfe-4619-b832-31c4a087a589"
         },
         "variant_id": {
           "description": "Unique internal identifier for the variant",
-          "type": "integer",
-          "format": "int64",
-          "example": 123
+          "type": "string",
+          "format": "uuid",
+          "readOnly": true,
+          "example": "bf3ba75b-8dfe-4619-b832-31c4a087a589"
         }
       }
     },
@@ -591,6 +614,12 @@ func init() {
                 "$ref": "#/definitions/Call"
               }
             }
+          },
+          "500": {
+            "description": "Internal error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
           }
         }
       },
@@ -621,6 +650,12 @@ func init() {
           },
           "405": {
             "description": "Cannot overwrite call",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal error",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -750,7 +785,10 @@ func init() {
             }
           },
           "404": {
-            "description": "Individual not found"
+            "description": "Individual not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
           },
           "500": {
             "description": "Internal error",
@@ -788,6 +826,12 @@ func init() {
           },
           "404": {
             "description": "Individual does not exist",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal error",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -866,12 +910,6 @@ func init() {
                 "type": "string",
                 "format": "url"
               }
-            }
-          },
-          "400": {
-            "description": "Variant provided in body does not pass schema validation",
-            "schema": {
-              "$ref": "#/definitions/Error"
             }
           },
           "405": {
@@ -956,6 +994,12 @@ func init() {
             "schema": {
               "$ref": "#/definitions/Error"
             }
+          },
+          "500": {
+            "description": "Internal error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
           }
         }
       }
@@ -999,15 +1043,17 @@ func init() {
         },
         "individual_id": {
           "description": "Unique internal identifier for the subject",
-          "type": "integer",
-          "format": "int64",
-          "example": 123
+          "type": "string",
+          "format": "uuid",
+          "readOnly": true,
+          "example": "bf3ba75b-8dfe-4619-b832-31c4a087a589"
         },
         "variant_id": {
           "description": "Unique internal identifier for the variant",
-          "type": "integer",
-          "format": "int64",
-          "example": 123
+          "type": "string",
+          "format": "uuid",
+          "readOnly": true,
+          "example": "bf3ba75b-8dfe-4619-b832-31c4a087a589"
         }
       }
     },

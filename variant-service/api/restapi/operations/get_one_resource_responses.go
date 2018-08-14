@@ -65,6 +65,11 @@ const GetOneResourceNotFoundCode int = 404
 swagger:response getOneResourceNotFound
 */
 type GetOneResourceNotFound struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Resource `json:"body,omitempty"`
 }
 
 // NewGetOneResourceNotFound creates GetOneResourceNotFound with default headers values
@@ -73,12 +78,27 @@ func NewGetOneResourceNotFound() *GetOneResourceNotFound {
 	return &GetOneResourceNotFound{}
 }
 
+// WithPayload adds the payload to the get one resource not found response
+func (o *GetOneResourceNotFound) WithPayload(payload *models.Resource) *GetOneResourceNotFound {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the get one resource not found response
+func (o *GetOneResourceNotFound) SetPayload(payload *models.Resource) {
+	o.Payload = payload
+}
+
 // WriteResponse to the client
 func (o *GetOneResourceNotFound) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
-	rw.Header().Del(runtime.HeaderContentType) //Remove Content-Type on empty responses
-
 	rw.WriteHeader(404)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
 }
 
 // GetOneResourceInternalServerErrorCode is the HTTP code returned for type GetOneResourceInternalServerError

@@ -71,6 +71,8 @@ paths:
             $ref: '#/definitions/Resource'
         404:
           description: Resource not found
+          schema:
+            $ref: '#/definitions/Resource'
         500:
           description: Internal error
           schema:

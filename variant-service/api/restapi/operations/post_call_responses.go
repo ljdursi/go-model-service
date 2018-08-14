@@ -122,3 +122,47 @@ func (o *PostCallMethodNotAllowed) WriteResponse(rw http.ResponseWriter, produce
 		}
 	}
 }
+
+// PostCallInternalServerErrorCode is the HTTP code returned for type PostCallInternalServerError
+const PostCallInternalServerErrorCode int = 500
+
+/*PostCallInternalServerError Internal error
+
+swagger:response postCallInternalServerError
+*/
+type PostCallInternalServerError struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewPostCallInternalServerError creates PostCallInternalServerError with default headers values
+func NewPostCallInternalServerError() *PostCallInternalServerError {
+
+	return &PostCallInternalServerError{}
+}
+
+// WithPayload adds the payload to the post call internal server error response
+func (o *PostCallInternalServerError) WithPayload(payload *models.Error) *PostCallInternalServerError {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the post call internal server error response
+func (o *PostCallInternalServerError) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *PostCallInternalServerError) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(500)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}

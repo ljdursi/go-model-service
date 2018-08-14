@@ -50,11 +50,11 @@ Some examples for correctly-formatted CURL requests to the server:
 
 ##### GET Individuals
 
-all
-`$ curl -i "localhost:3000/individuals`
-
 by ID
 `$ curl -i "localhost:3000/individuals/0d583066-039a-4f61-832e-b0f8f5156f7d"`
+
+all
+`$ curl -i "localhost:3000/individuals`
 
 ##### GET Variants
 
@@ -63,6 +63,14 @@ by ID
 
 by parameter
 `$ curl -i "localhost:3000/variants?chromosome=chr1&start=3&end=105"`
+
+##### GET Calls
+
+by ID
+`$ curl -i "localhost:3000/calls/0d583066-039a-4f61-832e-b0f8f5156f7d"`
+
+all
+`$ curl -i "localhost:3000/calls`
 
 #### POST
 
@@ -73,6 +81,10 @@ by parameter
 ##### POST Variants
 
 `$ curl -i localhost:3000/variants -d "{\"name\":\"rs7054258\", \"chromosome\":\"chr1\", \"start\":5, \"ref\":\"A\", \"alt\":\"T\"}" -H 'Content-Type: application/json'`
+
+##### POST Calls
+
+`$ curl -i localhost:3000/calls -d "{\"individual_id\":\"0d583066-039a-4f61-832e-b0f8f5156f7d\", \"variant_id\":\"0e583067-039a-4f61-832e-b0f8f5156f7d\", \"genotype\":\"0/1\", \"format\":\"GQ:DP:HQ 48:1:51,51\"}" -H 'Content-Type: application/json'`
 
 ## For Developers
 

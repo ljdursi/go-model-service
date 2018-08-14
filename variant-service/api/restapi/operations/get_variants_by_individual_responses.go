@@ -103,3 +103,47 @@ func (o *GetVariantsByIndividualNotFound) WriteResponse(rw http.ResponseWriter, 
 		}
 	}
 }
+
+// GetVariantsByIndividualInternalServerErrorCode is the HTTP code returned for type GetVariantsByIndividualInternalServerError
+const GetVariantsByIndividualInternalServerErrorCode int = 500
+
+/*GetVariantsByIndividualInternalServerError Internal error
+
+swagger:response getVariantsByIndividualInternalServerError
+*/
+type GetVariantsByIndividualInternalServerError struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewGetVariantsByIndividualInternalServerError creates GetVariantsByIndividualInternalServerError with default headers values
+func NewGetVariantsByIndividualInternalServerError() *GetVariantsByIndividualInternalServerError {
+
+	return &GetVariantsByIndividualInternalServerError{}
+}
+
+// WithPayload adds the payload to the get variants by individual internal server error response
+func (o *GetVariantsByIndividualInternalServerError) WithPayload(payload *models.Error) *GetVariantsByIndividualInternalServerError {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the get variants by individual internal server error response
+func (o *GetVariantsByIndividualInternalServerError) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *GetVariantsByIndividualInternalServerError) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(500)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}

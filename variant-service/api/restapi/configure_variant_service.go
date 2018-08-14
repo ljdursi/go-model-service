@@ -34,31 +34,31 @@ func configureAPI(api *operations.VariantServiceAPI) http.Handler {
 	api.JSONProducer = runtime.JSONProducer()
 
 	api.GetCallsHandler = operations.GetCallsHandlerFunc(func(params operations.GetCallsParams) middleware.Responder {
-		return middleware.NotImplemented("operation .GetCalls has not yet been implemented")
+		return handlers.GetCalls(params)
 	})
 	api.GetIndividualsHandler = operations.GetIndividualsHandlerFunc(func(params operations.GetIndividualsParams) middleware.Responder {
 		return handlers.GetIndividuals(params)
 	})
 	api.GetIndividualsByVariantHandler = operations.GetIndividualsByVariantHandlerFunc(func(params operations.GetIndividualsByVariantParams) middleware.Responder {
-		return middleware.NotImplemented("operation .GetIndividualsByVariant has not yet been implemented")
+		return handlers.GetIndividualsByVariant(params)
 	})
 	api.GetOneCallHandler = operations.GetOneCallHandlerFunc(func(params operations.GetOneCallParams) middleware.Responder {
-		return middleware.NotImplemented("operation .GetOneCall has not yet been implemented")
+		return handlers.GetOneCall(params)
 	})
 	api.GetOneIndividualHandler = operations.GetOneIndividualHandlerFunc(func(params operations.GetOneIndividualParams) middleware.Responder {
-		return middleware.NotImplemented("operation .GetOneIndividual has not yet been implemented")
+		return handlers.GetOneIndividual(params)
 	})
 	api.GetOneVariantHandler = operations.GetOneVariantHandlerFunc(func(params operations.GetOneVariantParams) middleware.Responder {
-		return middleware.NotImplemented("operation .GetOneVariant has not yet been implemented")
+		return handlers.GetOneVariant(params)
 	})
 	api.GetVariantsHandler = operations.GetVariantsHandlerFunc(func(params operations.GetVariantsParams) middleware.Responder {
 		return handlers.GetVariants(params)
 	})
 	api.GetVariantsByIndividualHandler = operations.GetVariantsByIndividualHandlerFunc(func(params operations.GetVariantsByIndividualParams) middleware.Responder {
-		return middleware.NotImplemented("operation .GetVariantsByIndividual has not yet been implemented")
+		return handlers.GetVariantsByIndividual(params)
 	})
 	api.PostCallHandler = operations.PostCallHandlerFunc(func(params operations.PostCallParams) middleware.Responder {
-		return middleware.NotImplemented("operation .PostCall has not yet been implemented")
+		return handlers.PostCall(params)
 	})
 	api.PostIndividualHandler = operations.PostIndividualHandlerFunc(func(params operations.PostIndividualParams) middleware.Responder {
 		return handlers.PostIndividual(params)

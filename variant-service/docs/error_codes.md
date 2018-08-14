@@ -14,6 +14,14 @@ Attempted a forbidden "GET all"-type request.
 
 GET requests for this entity are permitted only with some query parameters provided in the query string.
 
+##### 404001
+
+Requested resource cannot be found. The given resource ID does not correspond with any existing data.
+
+##### 404002
+
+The resource by which you are attempting to query for other data cannot be found. The given resource ID does not correspond with any existing data.
+
 ##### 405001
 
 Attempted to modify an existing record with POST (record creation), which should only be done with PUT (record modification).

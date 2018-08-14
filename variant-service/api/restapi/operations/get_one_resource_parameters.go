@@ -58,7 +58,6 @@ func (o *GetOneResourceParams) BindRequest(r *http.Request, route *middleware.Ma
 	return nil
 }
 
-// bindResourceID binds and validates parameter ResourceID from path.
 func (o *GetOneResourceParams) bindResourceID(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
@@ -82,11 +81,11 @@ func (o *GetOneResourceParams) bindResourceID(rawData []string, hasKey bool, for
 	return nil
 }
 
-// validateResourceID carries on validations for parameter ResourceID
 func (o *GetOneResourceParams) validateResourceID(formats strfmt.Registry) error {
 
 	if err := validate.FormatOf("resource_id", "path", "uuid", o.ResourceID.String(), formats); err != nil {
 		return err
 	}
+
 	return nil
 }
