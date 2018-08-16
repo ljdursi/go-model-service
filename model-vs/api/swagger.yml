@@ -21,6 +21,8 @@ info:
   description: A model variant service demonstarting CanDIG API best practices
   title: A barebones service for variant calls
   version: 1.0.0
+# TODO should add this for versioning
+# basePath: /v1
 produces:
 - application/json
 schemes:
@@ -37,6 +39,8 @@ paths:
         in: body
         schema:
           $ref: '#/definitions/Individual'
+          example:
+              description: "Subject 17"
       responses:
         201:
           description: New individual created
@@ -64,6 +68,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Individual'
+            example: []
         500:
           description: Internal error
           schema:
@@ -94,18 +99,9 @@ paths:
       operationId: get_variants
       summary: Get all variants within genomic range
       parameters:
-        - name: chromosome
-          in: query
-          type: string
-          pattern: "^[a-zA-Z0-9]*$"
-        - name: start
-          in: query
-          type: integer
-          minimum: 1
-        - name: end
-          in: query
-          type: integer
-          minimum: 1
+        - $ref: '#/parameters/chromosome'
+        - $ref: '#/parameters/start'
+        - $ref: '#/parameters/range_end'
       responses:
         200:
           description: Return variants
@@ -129,6 +125,12 @@ paths:
           in: body
           schema:
             $ref: '#/definitions/Variant'
+            example:
+              name: "rs6054257"
+              chromosome: "chr1"
+              start: 14370
+              ref: "G"
+              alt: "A"
       responses:
         201:
           description: New variant created
@@ -176,6 +178,11 @@ paths:
           in: body
           schema:
             $ref: '#/definitions/Call'
+            example:
+              individual_id: bf3ba75b-8dfe-4619-b832-31c4a087a589
+              variant_id: bf3ba75b-8dfe-4619-b832-31c4a087a589
+              genotype: "0/1"
+              fmt: "GQ:DP:HQ 48:1:51,51"
       responses:
         201:
           description: New call created
@@ -300,6 +307,27 @@ parameters:
     x-example: bf3ba75b-8dfe-4619-b832-31c4a087a589
     required: true
 
+  chromosome:
+    name: choromosome
+    in: query
+    type: string
+    pattern: "^[a-zA-Z0-9]*$"
+    x-example: "chr1"
+
+  start:
+    name: start
+    in: query
+    type: integer
+    minimum: 1
+    x-example: 10000
+
+  range_end:
+    name: end
+    in: query
+    type: integer
+    minimum: 1
+    x-example: 20000
+
 definitions:
   Error:
     type: object
@@ -359,13 +387,11 @@ definitions:
         format: uuid
         description: Unique internal identifier for the subject
         example: bf3ba75b-8dfe-4619-b832-31c4a087a589
-        readOnly: true
       variant_id:
         type: string
         format: uuid
         description: Unique internal identifier for the variant
         example: bf3ba75b-8dfe-4619-b832-31c4a087a589
-        readOnly: true
       genotype:
         type: string
         description: Called genotype
