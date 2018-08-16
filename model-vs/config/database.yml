@@ -1,0 +1,10 @@
+# This database config file must be kept within one of the following paths, relative to
+# the file attempting to make the database connection:
+# "", "./config", "/config", "../", "../config", "../..", "../../config", "APP_PATH", "POP_PATH"
+# For more information: https://github.com/gobuffalo/pop/blob/master/config.go
+
+development:
+  dialect: "sqlite3"
+  database: "../data/development.sqlite" # TODO change to $APP_PATH-relative path
+  host: "localhost"
+  port: "8080"

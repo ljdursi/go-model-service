@@ -7,5 +7,5 @@ before_install:
 
 install:
  - dep ensure
- - cd variant-service/api
- - go build -o ../../main ./cmd/variant-service-server/main.go
+ - cd model-vs/api
+ - go build -tags sqlite -o ../../main ./cmd/variant-service-server/main.go
