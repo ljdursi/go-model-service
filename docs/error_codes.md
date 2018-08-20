@@ -12,15 +12,15 @@ The code descriptions provided here are not intended to replace the error messag
 
 Attempted a forbidden "GET all"-type request.
 
-GET requests for this entity are permitted only with some query parameters provided in the query string.
+GET requests for this resource are permitted only with some query parameters provided in the query string.
 
 ##### 404001
 
-Requested resource cannot be found. The given resource ID does not correspond with any existing data.
+Requested record cannot be found. The given record ID does not correspond with any existing data for this resource.
 
 ##### 404002
 
-The resource by which you are attempting to query for other data cannot be found. The given resource ID does not correspond with any existing data.
+The resource by which you are attempting to query for other data cannot be found. The given record ID does not correspond with any existing data for this resource.
 
 ##### 405001
 
