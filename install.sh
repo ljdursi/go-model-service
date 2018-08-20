@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# This script installs the service by auto-generating the boilerplate code necessary
+# for running the service.
+# It also creates a new development database to write into.
+
 # Use the dep tool to install all project import dependencies in a
 # new vendor directory
 dep ensure
@@ -8,7 +12,7 @@ dep ensure
 # defined in the model-vs/data directory, using the soda tool from pop
 cd model-vs/data
 soda create -e development
-sode migrate up -e development
+soda migrate up -e development
 cd ../..
 
 # Swagger generate the boilerplate code necessary for handling API requests
