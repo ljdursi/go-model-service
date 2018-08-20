@@ -30,14 +30,10 @@
   version = "0.15.0"
 
 [[constraint]]
-  name = "github.com/go-openapi/loads"
-  version = "0.15.0"
-
-[[constraint]]
   name = "github.com/go-openapi/runtime"
   version = "0.15.0"
 
-[[constraint]]
+[[override]]
   name = "github.com/go-openapi/spec"
   version = "0.15.0"
 
@@ -47,10 +43,6 @@
 
 [[constraint]]
   name = "github.com/go-openapi/swag"
-  version = "0.15.0"
-
-[[constraint]]
-  name = "github.com/go-openapi/validate"
   version = "0.15.0"
 
 [[constraint]]
@@ -65,7 +57,18 @@
   name = "github.com/gobuffalo/validate"
   version = "2.0.0"
 
-[[constraint]]
+# Necessary for go-swagger auto-generated code (upon running `swagger generate server`)
+[[override]]
+  name = "github.com/go-openapi/loads"
+  version = "0.15.0"
+
+# Necessary for go-swagger auto-generated code (upon running `swagger generate server`)
+[[override]]
+  name = "github.com/go-openapi/validate"
+  version = "0.15.0"
+
+# Necessary for go-swagger auto-generated code (upon running `swagger generate server`)
+[[override]]
   name = "github.com/jessevdk/go-flags"
   version = "1.4.0"
 
