@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # TODO make smarter by only re-generating files if they've been modified (makefile?)
-# TODO rename file?
 
 # Generate handler utilities for the following resources: Individual, Variant, Call
 genny -in ./generics/generic_resource_utilities.go -out ./restapi/handlers/utilities/resource_utilities.go -pkg utilities gen "Individual=Individual,Variant,Call"
