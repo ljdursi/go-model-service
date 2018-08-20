@@ -6,6 +6,4 @@ before_install:
  - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
 
 install:
- - dep ensure
- - cd model-vs/api
- - go build -tags sqlite -o ../../main ./cmd/variant-service-server/main.go
+ - ./install.sh
