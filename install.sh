@@ -10,9 +10,9 @@ dep ensure
 
 # Create a sqlite3 development database and migrate it to the schema
 # defined in the model-vs/data directory, using the soda tool from pop
-cd model-vs/data
-soda create -e development
-soda migrate up -e development
+cd model-vs/config
+soda create -c ./database.yml -e development
+soda migrate up -c ./database.yml -e development -p ../data/migrations
 cd ../..
 
 # Swagger generate the boilerplate code necessary for handling API requests
@@ -24,7 +24,9 @@ cd ../..
 # Run a script to generate resource-specific request handlers for middleware,
 # from the generic handlers defined in the model-vs/api/generics package,
 # using the CanDIG-maintained CLI tool genny
-./model-vs/api/generate_handlers.sh
+cd model-vs/api
+./generate_handlers.sh
+cd ../..
 
 # Now that all the necessary boilerplate code has been auto-generated, compile the server
 go build -tags sqlite3 -o ./main model-vs/api/cmd/variant-service-server/main.go

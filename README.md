@@ -275,4 +275,4 @@ See the [genny README](https://github.com/CanDIG/genny#genny---generics-for-go) 
 
 Run `$ model-vs/api/generate_handlers.sh` to re-generate the handlers in the `github.com/CanDIG/go-model-service/model-vs/api/restapi/handlers` package.
 
-The template handlers in the `api/generics` package are not run as a part of the service, but are able to compile thanks to place-holder/scaffolding code in the `data/models`, `api/models`, `api/restapi/operations`, and `api/restapi/utilities` packages. This placeholder code can be easily identified by its employment of the "generic" type/word `Resource`.
+There remain several issues with the genny tool that block the complete integration of generic code-gen into our project. Please contribute to the resolution of these issues in our [genny](https://github.com/CanDIG/genny/issues) repository.
