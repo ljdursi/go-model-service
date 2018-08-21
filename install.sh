@@ -4,6 +4,8 @@
 # for running the service.
 # It also creates a new development database to write into.
 
+export POP_PATH=$GOPATH/src/github.com/CanDIG/go-model-service/model-vs/config
+
 # Use the dep tool to install all project import dependencies in a
 # new vendor directory
 dep ensure
@@ -29,4 +31,4 @@ cd model-vs/api
 cd ../..
 
 # Now that all the necessary boilerplate code has been auto-generated, compile the server
-go build -tags sqlite3 -o ./main model-vs/api/cmd/variant-service-server/main.go
+go build -tags sqlite -o ./main model-vs/api/cmd/variant-service-server/main.go

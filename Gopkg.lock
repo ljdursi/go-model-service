@@ -32,6 +32,12 @@
   revision = "59c0560478b705bf9bd12f9252224a0fad7c87df"
 
 [[projects]]
+  name = "github.com/docker/go-units"
+  packages = ["."]
+  revision = "47565b4f722fb6ceae66b95f853feed578a4a51c"
+  version = "v0.3.3"
+
+[[projects]]
   name = "github.com/fatih/color"
   packages = ["."]
   revision = "5b77d2a35fb0ede96d138fc9a99f5c9b6aef11b4"
@@ -45,38 +51,42 @@
 
 [[projects]]
   name = "github.com/go-openapi/analysis"
-  packages = ["."]
-  revision = "3c8fe72ed5d307113ef76c7c3035964d7e4d4b73"
-  version = "0.15.0"
+  packages = [
+    ".",
+    "internal"
+  ]
+  revision = "7c1bef8f6d9fa6148ce0d8a0ebf5339a084a6639"
+  version = "0.16.0"
 
 [[projects]]
   name = "github.com/go-openapi/errors"
   packages = ["."]
   revision = "b2b2befaf267d082d779bcef52d682a47c779517"
-  version = "0.15.0"
+  version = "0.16.0"
 
 [[projects]]
   name = "github.com/go-openapi/jsonpointer"
   packages = ["."]
   revision = "3a0015ad55fa9873f41605d3e8f28cd279c32ab2"
-  version = "0.15.0"
+  version = "0.16.0"
 
 [[projects]]
   name = "github.com/go-openapi/jsonreference"
   packages = ["."]
   revision = "3fb327e6747da3043567ee86abd02bb6376b6be2"
-  version = "0.15.0"
+  version = "0.16.0"
 
 [[projects]]
   name = "github.com/go-openapi/loads"
   packages = ["."]
   revision = "2a2b323bab96e6b1fdee110e57d959322446e9c9"
-  version = "0.15.0"
+  version = "0.16.0"
 
 [[projects]]
   name = "github.com/go-openapi/runtime"
   packages = [
     ".",
+    "flagext",
     "logger",
     "middleware",
     "middleware/denco",
@@ -85,7 +95,7 @@
     "security"
   ]
   revision = "9a3091f566c0811ef4d54b535179bc0fc484a11f"
-  version = "0.15.0"
+  version = "0.16.0"
 
 [[projects]]
   name = "github.com/go-openapi/spec"
@@ -97,7 +107,7 @@
   name = "github.com/go-openapi/strfmt"
   packages = ["."]
   revision = "913ee058e387ac83a67e2d9f13acecdcd5769fc6"
-  version = "0.15.0"
+  version = "0.16.0"
 
 [[projects]]
   name = "github.com/go-openapi/swag"
@@ -120,8 +130,8 @@
 [[projects]]
   name = "github.com/gobuffalo/envy"
   packages = ["."]
-  revision = "2d0f467653f3d961ce9ada4d32a230bdcb3bfe11"
-  version = "v1.6.3"
+  revision = "3c96536452167a705ca5a70b831d3810e1e10452"
+  version = "v1.6.4"
 
 [[projects]]
   name = "github.com/gobuffalo/fizz"
@@ -129,20 +139,26 @@
     ".",
     "translators"
   ]
-  revision = "a68affc47dc7145d791149e996c379a0f46ee507"
-  version = "v1.0.2"
+  revision = "7eecf9a728e2d152440dd4cae9630242f9567de2"
+  version = "v1.0.9"
+
+[[projects]]
+  name = "github.com/gobuffalo/github_flavored_markdown"
+  packages = ["."]
+  revision = "6af65dcbf5386db0b8da50e160ff0fdda7ef1459"
+  version = "v1.0.0"
 
 [[projects]]
   name = "github.com/gobuffalo/makr"
   packages = ["."]
-  revision = "2f752af1831478b8c496635cb46b947811097061"
-  version = "v1.1.0"
+  revision = "e49ce02a5624694f76d243abdad76d7d95fe1909"
+  version = "v1.1.4"
 
 [[projects]]
   name = "github.com/gobuffalo/packr"
   packages = ["."]
-  revision = "147bee9cde84aeca6693d1b1aedc595298f24d5b"
-  version = "v1.12.0"
+  revision = "1aab5672bd385f2a7da18bffa961912e7642ea79"
+  version = "v1.13.2"
 
 [[projects]]
   name = "github.com/gobuffalo/plush"
@@ -153,8 +169,8 @@
     "parser",
     "token"
   ]
-  revision = "d4510ca0961285d24ffa9c8bb7116bc25c2be950"
-  version = "v3.7.8"
+  revision = "621b4e90d1ccbbbcb80e1c6c6e01453121973055"
+  version = "v3.7.16"
 
 [[projects]]
   name = "github.com/gobuffalo/pop"
@@ -165,8 +181,8 @@
     "fix",
     "nulls"
   ]
-  revision = "9936c00d4230dae87d8ac5cf73149d9de7b0e899"
-  version = "v4.6.1"
+  revision = "97cff086dceb9022215125efd32320e4e9581137"
+  version = "v4.6.6"
 
 [[projects]]
   name = "github.com/gobuffalo/tags"
@@ -175,14 +191,14 @@
     "form",
     "form/bootstrap"
   ]
-  revision = "96c7cdfcadcb28eb1b42b9080ba7f93936ffc5c5"
-  version = "v2.0.7"
+  revision = "0e9ca016e3c1b995c9b4119e7d14acb4fa8139e6"
+  version = "v2.0.9"
 
 [[projects]]
   name = "github.com/gobuffalo/uuid"
   packages = ["."]
-  revision = "3a9fb6c5c481d4886f1e9323c61ad743fb955860"
-  version = "v2.0.0"
+  revision = "7652001f1b1ff3d69aa899943b668e9be27284a0"
+  version = "v2.0.3"
 
 [[projects]]
   name = "github.com/gobuffalo/validate"
@@ -190,8 +206,14 @@
     ".",
     "validators"
   ]
-  revision = "42d8db6e06e617cdedcc7a849d6690a2cb5a8d28"
-  version = "v2.0.0"
+  revision = "f6f3be4568c1ac31b364193100816d272e36ddc5"
+  version = "v2.0.3"
+
+[[projects]]
+  name = "github.com/jessevdk/go-flags"
+  packages = ["."]
+  revision = "c6ca198ec95c841fdb89fc0de7496fed11ab854e"
+  version = "v1.4.0"
 
 [[projects]]
   branch = "master"
@@ -225,17 +247,16 @@
     "jlexer",
     "jwriter"
   ]
-  revision = "efc7eb8984d6655c26b5c9d2e65c024e5767c37c"
+  revision = "03f2033d19d5860aef995fe360ac7d395cd8ce65"
 
 [[projects]]
   name = "github.com/markbates/going"
   packages = [
     "defaults",
-    "randx",
-    "wait"
+    "randx"
   ]
-  revision = "0576708c56cea02331f864fe6e157ac7841923e4"
-  version = "v1.0.0"
+  revision = "e6789dc391e3308d92d2f9131990b7426e5e3066"
+  version = "v1.0.2"
 
 [[projects]]
   name = "github.com/markbates/inflect"
@@ -264,8 +285,8 @@
 [[projects]]
   name = "github.com/microcosm-cc/bluemonday"
   packages = ["."]
-  revision = "dafebb5b6ff2861a0d69af64991e10866c19be85"
-  version = "v1.0.0"
+  revision = "82c7118e8ccf7403d4860175d97bb635e8e28239"
+  version = "v1.0.1"
 
 [[projects]]
   branch = "master"
@@ -281,12 +302,6 @@
 
 [[projects]]
   branch = "master"
-  name = "github.com/russross/blackfriday"
-  packages = ["."]
-  revision = "11635eb403ff09dbc3a6b5a007ab5ab09151c229"
-
-[[projects]]
-  branch = "master"
   name = "github.com/serenize/snaker"
   packages = ["."]
   revision = "a683aaf2d516deecd70cad0c72e3ca773ecfcef0"
@@ -296,12 +311,6 @@
   packages = ["diffmatchpatch"]
   revision = "1744e2970ca51c86172c8190fadad617561ed6e7"
   version = "v1.0.0"
-
-[[projects]]
-  branch = "master"
-  name = "github.com/shurcooL/github_flavored_markdown"
-  packages = ["."]
-  revision = "8913699a52e3aa02aa96387098e0004bb84aacf0"
 
 [[projects]]
   branch = "master"
@@ -369,9 +378,10 @@
     "context",
     "html",
     "html/atom",
-    "idna"
+    "idna",
+    "netutil"
   ]
-  revision = "a680a1efc54dd51c040b3b5ce4939ea3cf2ea0d1"
+  revision = "922f4815f713f213882e8ef45e0d315b164d705c"
 
 [[projects]]
   branch = "master"
@@ -383,7 +393,7 @@
   branch = "master"
   name = "golang.org/x/sys"
   packages = ["unix"]
-  revision = "ac767d655b305d4e9612f5f6e33120b9176c4ad4"
+  revision = "3b58ed4ad3395d483fc92d5d14123ce2c3581fec"
 
 [[projects]]
   name = "golang.org/x/text"
@@ -423,6 +433,12 @@
   revision = "9856a29383ce1c59f308dd1cf0363a79b5bef6b5"
 
 [[projects]]
+  name = "gopkg.in/russross/blackfriday.v1"
+  packages = ["."]
+  revision = "55d61fa8aa702f59229e6cff85793c22e580eaf5"
+  version = "v1.5.1"
+
+[[projects]]
   name = "gopkg.in/yaml.v2"
   packages = ["."]
   revision = "5420a8b6744d3b0345ab293f6fcba19c978f1183"
@@ -431,6 +447,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "155b037316b5c7f84c615fa9afa5ed0844649cadd59892df01b227eb9d5c7a1c"
+  inputs-digest = "b9fce6ebb901706a34b6fc1dadd73411fa552973aca219f540c6e7eefad60adc"
   solver-name = "gps-cdcl"
   solver-version = 1
