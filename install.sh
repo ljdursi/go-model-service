@@ -37,6 +37,10 @@ cd ../..
 # using the CanDIG-maintained CLI tool genny
 cd model-vs/api
 ./generate_handlers.sh
+pwd
+ls
+ls model-vs/api/restapi/handlers/get_many.go
+cat model-vs/api/restapi/handlers/get_many.go
 cd ../..
 
 # Now that all the necessary boilerplate code has been auto-generated, compile the server
