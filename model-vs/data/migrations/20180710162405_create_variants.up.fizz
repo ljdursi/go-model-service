@@ -5,4 +5,4 @@ create_table("variants") {
 	t.Column("start", "integer", {})
 	t.Column("ref", "string", {})
 	t.Column("alt", "string", {})
-})
+}

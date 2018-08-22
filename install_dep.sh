@@ -11,8 +11,8 @@
 # for these tools.
 
 # Install sqlite3 (database backend)
-apt-get update
-apt-get install -y sqlite3 libsqlite3-dev
+sudo apt-get update
+sudo apt-get install -y sqlite3 libsqlite3-dev
 
 # Install dep (managing project dependencies from Go import statements)
 curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
@@ -28,3 +28,4 @@ go install -tags sqlite github.com/gobuffalo/pop/soda # soda is the pop CLI
 
 # Install genny (code-gen solution for generics in Go)
 go get github.com/CanDIG/genny
+which genny
