@@ -11,3 +11,6 @@ before_install:
 
 install:
  - ./install.sh
+
+script:
+ - true
