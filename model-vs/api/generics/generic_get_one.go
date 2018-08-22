@@ -3,7 +3,7 @@ package generics
 import (
 	"github.com/CanDIG/go-model-service/model-vs/api/restapi/operations"
 	"github.com/go-openapi/runtime/middleware"
-	"github.com/CanDIG/go-model-service/model-vs/api/restapi/handlers/utilities"
+	"github.com/CanDIG/go-model-service/model-vs/api/restapi/utilities"
 	"github.com/CanDIG/go-model-service/model-vs/errors"
 		apimodels "github.com/CanDIG/go-model-service/model-vs/api/models"
 )

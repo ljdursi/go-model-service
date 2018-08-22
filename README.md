@@ -70,10 +70,10 @@ See `install_dep.sh` for an example of the installation of steps 3-7. It s not r
   $ git checkout https://github.com/CanDIG/go-model-service.git
   $ cd go-model-service
   ```
-2. In the root directory of this project (ie. the directory where `Gopkg.lock` and `Gopkg.toml` are found) use the `dep` CLI tool to install all project import dependencies in a new `vendor` directory:
+2. In the root directory of this project (ie. the directory where `Gopkg.lock` and `Gopkg.toml` are found) use the `dep` CLI tool to install all project import dependencies in a new `vendor` directory. See this README's [developers' notes for dep](#dep) for an explanation of the `-vendor-only` option used here.
   ```
   $ cd $GOPATH/src/github.com/CanDIG/go-model-service
-  $ dep ensure
+  $ dep ensure -vendor-only
   ```
 3. Create a sqlite3 development database and migrate it to the schema defined in the `model-vs/data` directory, using the pop CLI tool `soda`:
   ```
@@ -185,7 +185,13 @@ For your ease of adjustment to developing on this stack, and in particular to th
 Please note that most auto-generated code has been excluded from this repository, and that instead there are instructions for generating this code locally provided in the [Descriptive Installation](#descriptive-installation-of-the-go-model-service) section of this README. Binary files such as main and development.sqlite have also been excluded from this repository.
 The exclusions of these auto-generated and binary files is considered to be best form for version control repository maintenance. However, auto-generated files that are *not* generally re-generated (and are therefore safe to edit) should be pushed to this repository. `model-vs/api/restapi/configure_variant_service.go` and the `model-vs/data/models` package are examples of such safe-to-edit auto-generated code.
 
-### Installing Dev Tools
+### Dep
+
+In the initial installation of the service, the vendor-building step is run with `$ dep ensure -vendor-only`. This is to avoid modification of Gopkg.lock, which contains information about vital sub-packages for go-swagger that can not be explicitly constrained in Gopkg.toml.
+
+For example, package "github.com/go-openapi/runtime/flagext" is required by go-swagger but is *not* solved into Gopkg.lock if `dep ensure` is run prior to `swagger validate`. Therefore it is important to read the existing Gopkg.lock file in the initial installation, rather than solve for a new one.
+
+For more information, see the [dep documentation](https://golang.github.io/dep/docs/ensure-mechanics.html).
 
 ### Go-Swagger
 

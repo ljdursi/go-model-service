@@ -308,7 +308,7 @@ parameters:
     required: true
 
   chromosome:
-    name: choromosome
+    name: chromosome
     in: query
     type: string
     pattern: "^[a-zA-Z0-9]*$"

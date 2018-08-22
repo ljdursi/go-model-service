@@ -1,16 +1,14 @@
 # Build stage
 FROM golang
-ARG WORKDIR=/go/src/github.com/CanDIG/go-model-service
 
-ADD . /go/src/github.com/CanDIG/go-model-service
+ENV DIR=/go/src/github.com/CanDIG/go-model-service
+WORKDIR ${DIR}
+ADD . ${DIR}
 
 # Install CLI tool dependencies for install.sh script
-RUN cd $WORKDIR ./install_dep.sh
-
-# build go
-# -tags sqlite to include sqlite3 in the binary
-RUN cd $WORKDIR && ./install.sh
+RUN ./install_dep.sh
+RUN ./install.sh
 
 EXPOSE 3000
 
-ENTRYPOINT ["/go/src/github.com/CanDIG/go-model-service/main", "--port=3000"]
+ENTRYPOINT "${DIR}/main" --port=3000

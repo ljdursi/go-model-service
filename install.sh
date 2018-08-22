@@ -4,9 +4,20 @@
 # for running the service.
 # It also creates a new development database to write into.
 
+export POP_PATH=$GOPATH/src/github.com/CanDIG/go-model-service/model-vs/config
+
 # Use the dep tool to install all project import dependencies in a
-# new vendor directory
-dep ensure
+# new vendor directory.
+# It is run vendor-only to avoid modification of Gopkg.lock, which
+# contains information about vital sub-packages for go-swagger that
+# can not be explicitly constrained in Gopkg.toml.
+# For example, package "github.com/go-openapi/runtime/flagext" is
+# required by go-swagger but is *not* solved into Gopkg.lock if
+# `dep ensure` is run prior to `swagger validate`. Therefore it is
+# important to read the existing Gopkg.lock file in the initial
+# installation, rather than solve for a new one.
+# For more information, see: https://golang.github.io/dep/docs/ensure-mechanics.html
+dep ensure -vendor-only
 
 # Create a sqlite3 development database and migrate it to the schema
 # defined in the model-vs/data directory, using the soda tool from pop
@@ -29,4 +40,4 @@ cd model-vs/api
 cd ../..
 
 # Now that all the necessary boilerplate code has been auto-generated, compile the server
-go build -tags sqlite3 -o ./main model-vs/api/cmd/variant-service-server/main.go
+go build -tags sqlite -o ./main model-vs/api/cmd/variant-service-server/main.go

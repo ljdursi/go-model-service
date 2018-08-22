@@ -1,4 +1,4 @@
 create_table("individuals") {
 	t.Column("id", "uuid", {"primary": true})
 	t.Column("description", "string", {})
-})
+}

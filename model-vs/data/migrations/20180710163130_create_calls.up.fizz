@@ -4,4 +4,4 @@ create_table("calls") {
 	t.Column("variant", "uuid", {})
 	t.Column("genotype", "string", {})
 	t.Column("format", "string", {})
-})
+}
