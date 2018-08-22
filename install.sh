@@ -37,7 +37,8 @@ cd ../..
 # using the CanDIG-maintained CLI tool genny
 cd model-vs/api
 ./generate_handlers.sh
-pwd
+echo "PWD = ${PWD}"
+echo "GOPATH = ${GOPATH}"
 ls
 ls model-vs/api/restapi/handlers/get_many.go
 cat model-vs/api/restapi/handlers/get_many.go
