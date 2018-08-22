@@ -28,4 +28,3 @@ go install -tags sqlite github.com/gobuffalo/pop/soda # soda is the pop CLI
 
 # Install genny (code-gen solution for generics in Go)
 go get github.com/CanDIG/genny
-which genny
