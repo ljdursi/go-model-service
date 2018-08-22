@@ -11,8 +11,8 @@
 # for these tools.
 
 # Install sqlite3 (database backend); sudo if necessary
-apt-get update || sudo apt-get update
-apt-get install -y sqlite3 libsqlite3-dev || sudo apt-get install -y sqlite3 libsqlite3-dev
+apt-get update
+apt-get install -y sqlite3 libsqlite3-dev
 
 # Install dep (managing project dependencies from Go import statements)
 curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
