@@ -10,9 +10,9 @@
 # Please see the README for "Installing the Stack" for installation instructions
 # for these tools.
 
-# Install sqlite3 (database backend)
-sudo apt-get update
-sudo apt-get install -y sqlite3 libsqlite3-dev
+# Install sqlite3 (database backend); sudo if necessary
+apt-get update || sudo apt-get update
+apt-get install -y sqlite3 libsqlite3-dev || sudo apt-get install -y sqlite3 libsqlite3-dev
 
 # Install dep (managing project dependencies from Go import statements)
 curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
