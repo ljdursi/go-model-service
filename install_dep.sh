@@ -10,7 +10,7 @@
 # Please see the README for "Installing the Stack" for installation instructions
 # for these tools.
 
-# Install sqlite3 (database backend); sudo if necessary
+# Install sqlite3 (database backend)
 apt-get update
 apt-get install -y sqlite3 libsqlite3-dev
 
