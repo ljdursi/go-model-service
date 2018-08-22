@@ -1,6 +1,11 @@
 language: go
 go_import_path: ${GOPATH}/src/github.com/CanDIG/go-model-service
 
+go:
+  - "1.8"
+  - "1.9"
+  - "1.10.x"
+
 before_install:
  - ./install_dep.sh
 
