@@ -27,4 +27,4 @@ install:
  - ./install.sh
 
 script:
- - cd model-vs/api && dredd -c ../../dredd.yml -l verbose
+ - cd model-vs/api && dredd --config ../../dredd.yml -l verbose
