@@ -6,11 +6,20 @@ go:
   - "1.9"
   - "1.10.x"
 
+cache:
+  directories:
+    - ~/node_modules
+    - ~/.nvm
+
 before_install:
  - ./install_dep.sh
+ - apt-get install -y nodejs npm # for dredd
+ - apt-get install python-pip # for dreddhooks
+ - npm install -g dredd
+ - pip install dredd_hooks
 
 install:
  - ./install.sh
 
 script:
- - true
+ - cd model-vs/api && dredd
