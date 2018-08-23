@@ -11,10 +11,15 @@ cache:
     - ~/node_modules
     - ~/.nvm
 
+addons:
+  apt:
+    packages:
+    - nodejs
+    - npm
+    - python3-pip
+
 before_install:
  - ./install_dep.sh
- - sudo apt-get install -y nodejs npm # for dredd
- - sudo apt-get install python-pip # for dreddhooks
  - npm install -g dredd
  - pip install dredd_hooks
 
