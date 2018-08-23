@@ -95,28 +95,6 @@ paths:
             $ref: "#/definitions/Error"
 
   /variants:
-    get:
-      operationId: get_variants
-      summary: Get all variants within genomic range
-      parameters:
-        - $ref: '#/parameters/chromosome'
-        - $ref: '#/parameters/start'
-        - $ref: '#/parameters/range_end'
-      responses:
-        200:
-          description: Return variants
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Variant'
-        403:
-          description: Forbidden to query for all variants
-          schema:
-            $ref: '#/definitions/Error'
-        500:
-          description: Internal error
-          schema:
-            $ref: "#/definitions/Error"
     post:
       operationId: post_variant
       summary: Add a variant to the database
@@ -146,6 +124,28 @@ paths:
             $ref: "#/definitions/Error"
         500:
           description: Internal error - Variant not created
+          schema:
+            $ref: "#/definitions/Error"
+    get:
+      operationId: get_variants
+      summary: Get all variants within genomic range
+      parameters:
+        - $ref: '#/parameters/chromosome'
+        - $ref: '#/parameters/start'
+        - $ref: '#/parameters/range_end'
+      responses:
+        200:
+          description: Return variants
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Variant'
+        403:
+          description: Forbidden to query for all variants
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Internal error
           schema:
             $ref: "#/definitions/Error"
 
