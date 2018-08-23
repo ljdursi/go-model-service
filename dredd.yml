@@ -1,9 +1,9 @@
 dry-run: null
-hookfiles: dreddhooks.py
+hookfiles: ../../dreddhooks.py
 language: python
-server: ./main --port=3000
-config: model-vs/api/dredd.yml
-blueprint: model-vs/api/swagger.yml
+server: ../../main --port=3000
+config: ../../dredd.yml
+blueprint: swagger.yml
 sandbox: false
 server-wait: 2
 init: false
