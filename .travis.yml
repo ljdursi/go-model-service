@@ -21,7 +21,7 @@ addons:
 before_install:
  - ./install_dep.sh
  - npm install -g dredd
- - pip3 install dredd_hooks
+ - sudo pip3 install dredd_hooks
 
 install:
  - ./install.sh
