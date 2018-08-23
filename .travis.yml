@@ -13,8 +13,8 @@ cache:
 
 before_install:
  - ./install_dep.sh
- - apt-get install -y nodejs npm # for dredd
- - apt-get install python-pip # for dreddhooks
+ - sudo apt-get install -y nodejs npm # for dredd
+ - sudo apt-get install python-pip # for dreddhooks
  - npm install -g dredd
  - pip install dredd_hooks
 
